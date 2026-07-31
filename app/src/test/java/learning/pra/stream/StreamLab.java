@@ -1,7 +1,7 @@
 package learning.pra.stream;
 
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 public final class StreamLab {
     private StreamLab() {
@@ -17,7 +17,7 @@ public final class StreamLab {
     // 2. 把字符串列表转成大写并去重。例 ["a","b","A","a"] -> ["A","B"]
     // 返回不可变 List
     public static List<String> upperCaseDistinct(List<String> strs) {
-        return null;
+        return strs.stream().map(s -> s.toUpperCase()).distinct().collect(Collectors.toList());
     }
 
     // 3. 按字符串长度分组。例 ["a","bb","cc","ddd"] -> {1:["a"], 2:["bb","cc"], 3:["ddd"]}
