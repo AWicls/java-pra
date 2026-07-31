@@ -1,5 +1,6 @@
 package learning.pra.generics;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -43,6 +44,18 @@ public class GenericsLab {
     // 4. 泛型类：实现一个简单的栈 Stack<T>（push / pop / isEmpty / size）
     // 作为 GenericsLab 的静态内部类
     public static class Stack<T> {
+        private final List<T> items = new ArrayList<>();
+
+        public void push(T item) {
+            items.addLast(item);
+        }
+
+        public T pop() {
+            if (items.isEmpty()) {
+                throw new NoSuchElementException();
+            }
+                return items.removeLast();
+        }
         // 自己实现
     }
 
