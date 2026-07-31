@@ -69,9 +69,13 @@ graph LR
 - [x] 第一课：集合框架（ListLab）- 去重 / 反转 / 频率 / max / 不可变集合
 - [x] 第二课：泛型（GenericsLab）- 类型参数 / 上界 / PECS / 类型擦除 / Stack 泛型类
 - [x] 第三课：函数式与 Stream（StreamLab）- filter/map/collect/groupingBy/Optional
-- [ ] 第四课：现代特性（Records / Pattern Matching / Sealed）
-- [ ] 第五课：并发与多线程（JUC / CompletableFuture / Virtual Threads）
+- [x] 第四课：现代特性（ModernLab）- Records / Sealed / Pattern Matching switch
+- [ ] 第五课：并发与多线程（Thread / synchronized / Atomic / volatile）
 - [ ] 第六课：反射 / 注解 / IO
+
+## 学习笔记
+
+详细的每日学习总结（知识点 + 真实坑 + 待补强项）见 [docs/](docs/) 目录。
 
 ## 备注
 
