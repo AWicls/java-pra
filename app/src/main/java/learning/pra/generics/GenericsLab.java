@@ -1,6 +1,7 @@
 package learning.pra.generics;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class GenericsLab {
     private GenericsLab() {
@@ -18,7 +19,17 @@ public class GenericsLab {
     // "banana"
     // 要求空列表抛 NoSuchElementException（这次自己用 for 循环实现，不用 Collections.max）
     public static <T extends Comparable<T>> T max(List<T> source) {
-        return null;
+        if (source.isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        T max = source.get(0);
+        for (T t : source) {
+            int compareResult = t.compareTo(max);
+            if (compareResult > 0) {
+                max = t;
+            }
+        }
+        return max;
     }
 
     // 3. PECS 实战：把 from 的元素全部复制到 to
