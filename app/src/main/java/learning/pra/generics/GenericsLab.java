@@ -25,6 +25,9 @@ public class GenericsLab {
         }
         T max = source.get(0);
         for (T t : source) {
+            if (t == null) {
+                continue;
+            }
             int compareResult = t.compareTo(max);
             if (compareResult > 0) {
                 max = t;
