@@ -56,11 +56,20 @@ public class GenericsLab {
             }
                 return items.removeLast();
         }
+
+        public Boolean isEmpty() {
+            return items.isEmpty();
+        }
+
+        public int size() {
+            return items.size();
+        }
         // 自己实现
     }
 
     // 5. 类型擦除验证：返回两个不同泛型 List 的 class 是否相同
     public static boolean sameClassAtRuntime() {
+
         return false;
     }
 }
