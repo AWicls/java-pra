@@ -22,18 +22,18 @@ public final class StreamLab {
 
     // 3. 按字符串长度分组。例 ["a","bb","cc","ddd"] -> {1:["a"], 2:["bb","cc"], 3:["ddd"]}
     public static Map<Integer, List<String>> groupByLength(List<String> strs) {
-        return null;
+        return strs.stream().collect(Collectors.groupingBy(s -> s.length()));
     }
 
     // 4. 统计每个单词出现次数，返回 Map<单词, 次数>
     // 例 ["apple","banana","apple"] -> {"apple":2, "banana":1}
     public static Map<String, Long> wordFrequency(List<String> words) {
-        return null;
+        return words.stream().collect(Collectors.groupingBy(s -> s, Collectors.counting()));
     }
 
     // 5. 找出列表中第一个大于 10 的元素，没有则返回 -1
     // 用 Stream 实现（不要用 for 循环）
     public static int findFirstGreaterThanTen(List<Integer> nums) {
-        return 0;
+        return nums.stream().filter(n -> n > 10).findFirst().orElse(-1);
     }
 }
