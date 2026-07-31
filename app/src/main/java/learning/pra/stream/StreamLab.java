@@ -10,6 +10,7 @@ public final class StreamLab {
     // 1. 求列表中所有偶数的平方和。例 [1,2,3,4,5,6] -> 4+16+36 = 56
     public static int sumOfEvenSquares(List<Integer> nums) {
         return nums.stream()
+                .filter(n -> n % 2 == 0)
                 .mapToInt(n -> n * n)
                 .sum();
     }
@@ -17,7 +18,7 @@ public final class StreamLab {
     // 2. 把字符串列表转成大写并去重。例 ["a","b","A","a"] -> ["A","B"]
     // 返回不可变 List
     public static List<String> upperCaseDistinct(List<String> strs) {
-        return strs.stream().map(s -> s.toUpperCase()).distinct().collect(Collectors.toList());
+        return strs.stream().map(s -> s.toUpperCase()).distinct().toList();
     }
 
     // 3. 按字符串长度分组。例 ["a","bb","cc","ddd"] -> {1:["a"], 2:["bb","cc"], 3:["ddd"]}
