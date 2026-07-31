@@ -57,7 +57,7 @@ public class GenericsLab {
                 return items.removeLast();
         }
 
-        public Boolean isEmpty() {
+        public boolean isEmpty() {
             return items.isEmpty();
         }
 
