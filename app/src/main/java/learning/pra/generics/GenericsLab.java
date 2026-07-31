@@ -35,7 +35,9 @@ public class GenericsLab {
     // 3. PECS 实战：把 from 的元素全部复制到 to
     // 提示签名：public static <T> void copy(List<? extends T> from, List<? super T> to)
     public static <T> void copy(List<? extends T> from, List<? super T> to) {
-
+        for (T t : from) {
+            to.add(t);
+        }
     }
 
     // 4. 泛型类：实现一个简单的栈 Stack<T>（push / pop / isEmpty / size）
