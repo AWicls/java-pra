@@ -69,7 +69,8 @@ public class GenericsLab {
 
     // 5. 类型擦除验证：返回两个不同泛型 List 的 class 是否相同
     public static boolean sameClassAtRuntime() {
-
-        return false;
+        List<String> a = new ArrayList<>();
+        List<Integer> b = new ArrayList<>();
+        return a.getClass() == b.getClass();
     }
 }
