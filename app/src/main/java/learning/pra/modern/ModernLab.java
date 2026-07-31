@@ -39,7 +39,11 @@ public final class ModernLab {
      * 不需要 default（Sealed 保证穷尽）
      */
     public static double area(Shape shape) {
-        return 0;
+        return switch (shape) {
+            case null -> {throw new NoSuchElementException();}
+            case Circle r -> Math.PI * r.radius() * r.radius();
+            case Rectangle rect -> rect.width() * rect.width();
+        };
     }
 
     // ========== 3. Pattern Matching for instanceof ==========
@@ -53,7 +57,13 @@ public final class ModernLab {
      * 其他 -> "未知类型"
      */
     public static String describe(Object obj) {
-        return null;
+        return switch (obj) {
+            case null -> "空";
+            case Integer i -> "整数：" + i;
+            case String s -> "字符串: " + s;
+            case List<?> list -> "列表: " + list.size() + "个元素";
+            default -> "未知类型";
+        };
     }
 
     // ========== 4. 综合应用 ==========
@@ -63,6 +73,10 @@ public final class ModernLab {
      * 例 "[Circle(r=2.0), Rectangle(3.0x4.0)]" -> ["圆形 面积=12.57", "矩形 面积=12.0"]
      */
     public static List<String> describeShapes(List<Shape> shapes) {
-        return null;
+        return shapes.stream().map(shape -> switch (shape) {
+            case Circle c -> "圆形 面积=" + area(c);          // c 是 Circle
+            case Rectangle r -> "矩形 面积=" + area(r);        // r 是 Rectangle
+        })
+        .toList();
     }
 }
