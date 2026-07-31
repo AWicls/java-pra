@@ -9,7 +9,9 @@ public class GenericsLab {
     // 1. 泛型方法：反转任意类型 List。例 reverse([1,2,3]) -> [3,2,1]，reverse(["a","b"]) ->
     // ["b","a"]
     public static <T> List<T> reverse(List<T> source) {
-        return null;
+        List<T> listCopy = List.copyOf(source);
+        List<T> reversed = listCopy.reversed();
+        return reversed;
     }
 
     // 2. 泛型方法 + 上界：求 List 中最大值。max([3,1,2]) -> 3，max(["banana","apple"]) ->
