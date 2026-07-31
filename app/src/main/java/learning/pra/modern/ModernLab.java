@@ -42,7 +42,7 @@ public final class ModernLab {
         return switch (shape) {
             case null -> {throw new NoSuchElementException();}
             case Circle r -> Math.PI * r.radius() * r.radius();
-            case Rectangle rect -> rect.width() * rect.width();
+            case Rectangle rect -> rect.width() * rect.height();
         };
     }
 
