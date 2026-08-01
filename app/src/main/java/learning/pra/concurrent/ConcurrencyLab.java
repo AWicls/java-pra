@@ -62,20 +62,16 @@ public class ConcurrencyLab {
 private final AtomicInteger atomicCount = new AtomicInteger(0);   // 怎么初始化？
 
 public int atomicIncrement(int times) {
-    // ??? 重置（提示：AtomicInteger 怎么重置？）
     atomicCount.set(0);
-    // ??? 启动 4 线程，每个加 times 次
-    // ??? 用 atomicCount.???()  替代 synchronized
-    Runnable task = () -> {
-        for (int i = 0; i < times; i++) {
-            atomicCount.incrementAndGet();
-        }
-    };
-
-    runWithFourThreads(times, task);
-
-    // ??? join 等待
-    // ??? 返回 atomicCount.get()
+    List<Thread> threads = new ArrayList<>();
+    for (int i = 0; i < 4; i++) {
+        Thread t = new Thread(() -> {
+            for (int j = 0; j < times; j++) atomicCount.incrementAndGet();
+        }, "atom-" + i);
+        threads.add(t);
+        t.start();
+    }
+    threads.forEach(ConcurrencyLab::joinQuietly);
     return atomicCount.get();
 }
 
