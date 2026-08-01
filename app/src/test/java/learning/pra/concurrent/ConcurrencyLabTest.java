@@ -48,4 +48,20 @@ public class ConcurrencyLabTest {
         System.out.println("volatile loopCount = " + result);
         assertTrue(result > 0, "worker 应跑了至少 1 次");
     }
+
+    @Test
+    @DisplayName("任务5: producerConsumer 生产0-9消费求和 应返回45")
+    void producerConsumer_求和为45() {
+        ConcurrencyLab lab = new ConcurrencyLab();
+        int result = lab.producerConsumer();
+        assertEquals(45, result, "0+1+...+9 = 45");
+    }
+
+    @Test
+    @DisplayName("任务6: virtualThreadSum 100个虚拟线程求和 应返回4950")
+    void virtualThreadSum_100个虚拟线程_应返回4950() throws Exception {
+        ConcurrencyLab lab = new ConcurrencyLab();
+        int result = lab.virtualThreadSum(100);
+        assertEquals(4950, result, "0+1+...+99 = 4950");
+    }
 }

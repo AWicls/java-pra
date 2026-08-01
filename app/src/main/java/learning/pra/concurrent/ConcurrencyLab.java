@@ -2,7 +2,12 @@ package learning.pra.concurrent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConcurrencyLab {
@@ -92,7 +97,7 @@ public class ConcurrencyLab {
             while (running) { // ??? 检查 running 标志
                 loopCount++; // 不需要原子（单线程改）
                 try {
-                    Thread.sleep(100);   // ← 加 sleep 防溢出
+                    Thread.sleep(100); // ← 加 sleep 防溢出
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return;
@@ -117,6 +122,68 @@ public class ConcurrencyLab {
         joinQuietly(worker);
 
         return loopCount;
+    }
+
+    public int producerConsumer() {
+        ArrayBlockingQueue<Integer> queue = new ArrayBlockingQueue<>(5);
+
+        int[] sum = new int[1];
+        // 生产者
+        Thread producer = new Thread(() -> {
+            try {
+                for (int i = 0; i < 10; i++) {
+                    queue.put(i);
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        Thread consumer = new Thread(() -> {
+            try {
+                for (int i = 0; i < 10; i++) {
+                    int value = queue.take();
+                    sum[0] += value;
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        producer.start();
+        consumer.start();
+        joinQuietly(producer);
+        joinQuietly(consumer);
+
+        return sum[0];
+    }
+
+    public int virtualThreadSum(int n) throws InterruptedException, ExecutionException {
+        // ??? 创建 newVirtualThreadPerTaskExecutor
+        // ??? 创建 n 个任务,每个 sleep 1ms 后返回编号 i
+        // ??? 收集 Future,用 get() 取结果
+        // ??? try-with-resources 自动等全部完成
+        // ??? 返回 0+1+...+(n-1) = n*(n-1)/2
+
+        int sum = 0;
+
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();) {
+            List<Future<Integer>> futures = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                final int index = i;
+                Future<Integer> future = executor.submit(() -> {
+                    Thread.sleep(1);
+                    return index;
+                });
+                futures.add(future);
+            }
+            for (Future<Integer> future : futures) {
+                sum += future.get();
+            }
+        }
+
+        return sum;
+
     }
 
 }
