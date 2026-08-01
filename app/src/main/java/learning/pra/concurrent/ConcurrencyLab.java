@@ -1,29 +1,58 @@
 package learning.pra.concurrent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ConcurrencyLab {
 
-    // 用 Runnable + start() 返回新线程的名字
-    // 要求：必须真正 start() 新线程，不能在主线程同步跑
-    // 提示：在线程体内调 Thread.currentThread().getName()
-    //       用某种方式把名字传回主线程（想一想怎么跨线程传值）
     public static String threadStart(String threadName) {
-
         String[] name = new String[1];
-
-        Runnable task = () -> {
-            name[0] = Thread.currentThread().getName();
-        };
-        Thread t1 = new Thread(task, threadName);
-
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();   // 恢复中断标志
-            throw new RuntimeException(e);          // 转成非受检异常抛出
-        }
-
+        Thread t = new Thread(() -> name[0] = Thread.currentThread().getName(), threadName);
+        t.start();
+        joinQuietly(t);
         return name[0];
     }
 
+    public int unsafeIncrement(int times) {
+        return runWithFourThreads(times, () -> unsafeCount++);
+    }
+
+    public int safeIncrement(int times) {
+        return runWithFourThreads(times, () -> {
+            synchronized (lock) { safeCount++; }
+        });
+    }
+
+    // 辅助方法：消除 unsafe/safe 的重复代码
+    private int runWithFourThreads(int times, Runnable increment) {
+        reset();
+        List<Thread> threads = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            Thread t = new Thread(() -> {
+                for (int j = 0; j < times; j++) increment.run();
+            }, "worker-" + i);
+            threads.add(t);
+            t.start();
+        }
+        threads.forEach(ConcurrencyLab::joinQuietly);
+        return total();
+    }
+
+    // 辅助方法：消除 join + 异常处理样板
+    private static void joinQuietly(Thread t) {
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+    }
+
+    // 持有状态字段
+    private int unsafeCount = 0;
+    private int safeCount = 0;
+    private final Object lock = new Object();
+
+    private void reset() { unsafeCount = 0; safeCount = 0; }
+    private int total() { return unsafeCount + safeCount; }
 }
