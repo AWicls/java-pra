@@ -2,6 +2,7 @@ package learning.pra.concurrent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConcurrencyLab {
@@ -73,6 +74,38 @@ public int atomicIncrement(int times) {
     }
     threads.forEach(ConcurrencyLab::joinQuietly);
     return atomicCount.get();
+}
+
+private volatile boolean running = true;   // volatile 保证可见性
+private int loopCount = 0;                  // 不需要 volatile（只在工作线程改）
+
+public int volatileDemo() {
+    running = true;
+    loopCount = 0;
+
+    Thread worker = new Thread(() -> {
+        while (running) {        // ??? 检查 running 标志
+            loopCount++;      // 不需要原子（单线程改）
+        }
+    }, "worker");
+
+    worker.start();
+
+    // ??? 主线程 sleep 一会儿（让 worker 跑几下）
+    try {
+        Thread.sleep(1000);
+    } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        throw new RuntimeException(e);
+    }
+
+    // ??? 然后把 running 设为 false
+    running = false;
+
+    // ??? join 等待 worker 退出
+    joinQuietly(worker);
+
+    return loopCount;
 }
 
 }

@@ -39,4 +39,13 @@ public class ConcurrencyLabTest {
         int result = lab.atomicIncrement(100000);
         assertEquals(400000, result, "AtomicInteger 应得到精确结果");
     }
+
+    @Test
+    @DisplayName("任务4: volatileDemo worker 应能正常退出并返回循环次数")
+    void volatileDemo_worker正常退出() throws InterruptedException {
+        ConcurrencyLab lab = new ConcurrencyLab();
+        int result = lab.volatileDemo();
+        System.out.println("volatile loopCount = " + result);
+        assertTrue(result > 0, "worker 应跑了至少 1 次");
+    }
 }
