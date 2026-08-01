@@ -7,13 +7,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConcurrencyLab {
 
-
     // 持有状态字段
     private int unsafeCount = 0;
     private int safeCount = 0;
     private final Object lock = new Object();
 
-    private int total() { return unsafeCount + safeCount; }
+    private int total() {
+        return unsafeCount + safeCount;
+    }
 
     public static String threadStart(String threadName) {
         String[] name = new String[1];
@@ -31,7 +32,9 @@ public class ConcurrencyLab {
     public int safeIncrement(int times) {
         safeCount = 0;
         return runWithFourThreads(times, () -> {
-            synchronized (lock) { safeCount++; }
+            synchronized (lock) {
+                safeCount++;
+            }
         });
     }
 
@@ -40,7 +43,8 @@ public class ConcurrencyLab {
         List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             Thread t = new Thread(() -> {
-                for (int j = 0; j < times; j++) increment.run();
+                for (int j = 0; j < times; j++)
+                    increment.run();
             }, "worker-" + i);
             threads.add(t);
             t.start();
@@ -60,52 +64,53 @@ public class ConcurrencyLab {
     }
 
     // 字段
-private final AtomicInteger atomicCount = new AtomicInteger(0);   // 怎么初始化？
+    private final AtomicInteger atomicCount = new AtomicInteger(0); // 怎么初始化？
 
-public int atomicIncrement(int times) {
-    atomicCount.set(0);
-    List<Thread> threads = new ArrayList<>();
-    for (int i = 0; i < 4; i++) {
-        Thread t = new Thread(() -> {
-            for (int j = 0; j < times; j++) atomicCount.incrementAndGet();
-        }, "atom-" + i);
-        threads.add(t);
-        t.start();
-    }
-    threads.forEach(ConcurrencyLab::joinQuietly);
-    return atomicCount.get();
-}
-
-private volatile boolean running = true;   // volatile 保证可见性
-private int loopCount = 0;                  // 不需要 volatile（只在工作线程改）
-
-public int volatileDemo() {
-    running = true;
-    loopCount = 0;
-
-    Thread worker = new Thread(() -> {
-        while (running) {        // ??? 检查 running 标志
-            loopCount++;      // 不需要原子（单线程改）
+    public int atomicIncrement(int times) {
+        atomicCount.set(0);
+        List<Thread> threads = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            Thread t = new Thread(() -> {
+                for (int j = 0; j < times; j++)
+                    atomicCount.incrementAndGet();
+            }, "atom-" + i);
+            threads.add(t);
+            t.start();
         }
-    }, "worker");
-
-    worker.start();
-
-    // ??? 主线程 sleep 一会儿（让 worker 跑几下）
-    try {
-        Thread.sleep(1000);
-    } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        throw new RuntimeException(e);
+        threads.forEach(ConcurrencyLab::joinQuietly);
+        return atomicCount.get();
     }
 
-    // ??? 然后把 running 设为 false
-    running = false;
+    private volatile boolean running = true; // volatile 保证可见性
+    private int loopCount = 0; // 不需要 volatile（只在工作线程改）
 
-    // ??? join 等待 worker 退出
-    joinQuietly(worker);
+    public int volatileDemo() {
+        running = true;
+        loopCount = 0;
 
-    return loopCount;
-}
+        Thread worker = new Thread(() -> {
+            while (running) { // ??? 检查 running 标志
+                loopCount++; // 不需要原子（单线程改）
+            }
+        }, "worker");
+
+        worker.start();
+
+        // ??? 主线程 sleep 一会儿（让 worker 跑几下）
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+
+        // ??? 然后把 running 设为 false
+        running = false;
+
+        // ??? join 等待 worker 退出
+        joinQuietly(worker);
+
+        return loopCount;
+    }
 
 }
