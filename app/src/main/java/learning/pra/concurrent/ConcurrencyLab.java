@@ -8,7 +8,15 @@ public class ConcurrencyLab {
     //       用某种方式把名字传回主线程（想一想怎么跨线程传值）
     public static String threadStart() {
         // ???
-        return null;
+        Runnable task = () -> {
+            String name = Thread.currentThread().getName();
+            System.err.println(name);
+        };
+        Thread t1 = new Thread(task, "lab-thread");
+
+        t1.start();
+
+        return t1.getName();
     }
 
 }
