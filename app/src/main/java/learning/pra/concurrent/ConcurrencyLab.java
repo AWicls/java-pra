@@ -6,17 +6,24 @@ public class ConcurrencyLab {
     // 要求：必须真正 start() 新线程，不能在主线程同步跑
     // 提示：在线程体内调 Thread.currentThread().getName()
     //       用某种方式把名字传回主线程（想一想怎么跨线程传值）
-    public static String threadStart() {
-        // ???
+    public static String threadStart(String threadName) {
+
+        String[] name = new String[1];
+
         Runnable task = () -> {
-            String name = Thread.currentThread().getName();
-            System.err.println(name);
+            name[0] = Thread.currentThread().getName();
         };
-        Thread t1 = new Thread(task, "lab-thread");
+        Thread t1 = new Thread(task, threadName);
 
         t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();   // 恢复中断标志
+            throw new RuntimeException(e);          // 转成非受检异常抛出
+        }
 
-        return t1.getName();
+        return name[0];
     }
 
 }
