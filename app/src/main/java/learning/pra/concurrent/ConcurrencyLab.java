@@ -91,6 +91,12 @@ public class ConcurrencyLab {
         Thread worker = new Thread(() -> {
             while (running) { // ??? 检查 running 标志
                 loopCount++; // 不需要原子（单线程改）
+                try {
+                    Thread.sleep(100);   // ← 加 sleep 防溢出
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
             }
         }, "worker");
 
