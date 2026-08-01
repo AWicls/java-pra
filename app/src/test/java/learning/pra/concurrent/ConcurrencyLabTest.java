@@ -31,4 +31,12 @@ public class ConcurrencyLabTest {
         System.out.println("unsafe 结果 = " + result + " (期望 400000，大概率小于)");
         assertTrue(result <= 400000, "最多等于 400000，丢更新会小于");
     }
+
+    @Test
+    @DisplayName("任务3: atomicIncrement 4线程各加100000次 结果应为400000")
+    void atomicIncrement_多线程_结果正确() throws InterruptedException {
+        ConcurrencyLab lab = new ConcurrencyLab();
+        int result = lab.atomicIncrement(100000);
+        assertEquals(400000, result, "AtomicInteger 应得到精确结果");
+    }
 }

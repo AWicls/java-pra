@@ -2,6 +2,7 @@ package learning.pra.concurrent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConcurrencyLab {
 
@@ -56,5 +57,26 @@ public class ConcurrencyLab {
             throw new RuntimeException(e);
         }
     }
+
+    // 字段
+private final AtomicInteger atomicCount = new AtomicInteger(0);   // 怎么初始化？
+
+public int atomicIncrement(int times) {
+    // ??? 重置（提示：AtomicInteger 怎么重置？）
+    atomicCount.set(0);
+    // ??? 启动 4 线程，每个加 times 次
+    // ??? 用 atomicCount.???()  替代 synchronized
+    Runnable task = () -> {
+        for (int i = 0; i < times; i++) {
+            atomicCount.incrementAndGet();
+        }
+    };
+
+    runWithFourThreads(times, task);
+
+    // ??? join 等待
+    // ??? 返回 atomicCount.get()
+    return atomicCount.get();
+}
 
 }
