@@ -1,9 +1,13 @@
 package learning.pra.concurrent;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.TimeoutException;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -113,5 +117,34 @@ public class ConcurrencyLabTest {
         ConcurrencyLab lab = new ConcurrencyLab();
         String result = lab.withFallback(() -> "￥99", "价格暂不可用");
         assertEquals("￥99", result, "正常时应返回原值，不走 fallback");
+    }
+
+    @Test
+    @DisplayName("补强4: withTimeout 超时抛 CompletionException cause 为 TimeoutException")
+    void withTimeout_超时抛CompletionException_且cause是TimeoutException() {
+        CompletionException ex = assertThrows(
+            CompletionException.class,
+            () -> ConcurrencyLab.withTimeout(100)
+        );
+        assertTrue(ex.getCause() instanceof TimeoutException,
+            "cause 应为 TimeoutException，实际是: " + ex.getCause());
+    }
+
+    @Test
+    @DisplayName("补强5: composeFlat 用 thenCompose 链2次 扁平返回结果")
+    void composeFlat_thenCompose链2次_扁平返回() {
+        assertEquals(2, ConcurrencyLab.composeFlat(0).join(), "0 -> 1 -> 2");
+        assertEquals(12, ConcurrencyLab.composeFlat(10).join(), "10 -> 11 -> 12");
+    }
+
+    @Test
+    @DisplayName("补强5: applyNested 用 thenApply 链2次 返回3层嵌套类型")
+    void applyNested_thenApply链2次_返回3层嵌套() {
+        // 编译通过即证明返回类型是 CF<CF<CF<Integer>>>（3 层嵌套）
+        // 取最终值要 join 三次，体现嵌套地狱代价
+        CompletableFuture<CompletableFuture<CompletableFuture<Integer>>> nested =
+            ConcurrencyLab.applyNested(0);
+        int result = nested.join().join().join();
+        assertEquals(2, result, "0 -> 1 -> 2，但要 join 三次才能拿到");
     }
 }

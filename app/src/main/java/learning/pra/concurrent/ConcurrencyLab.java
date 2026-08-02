@@ -9,6 +9,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -218,6 +219,39 @@ public class ConcurrencyLab {
         CompletableFuture<String> cf = CompletableFuture.supplyAsync(failing);
         CompletableFuture<String> safe = cf.exceptionally(ex -> fallback);
         return safe.join();
+    }
+
+    public static String withTimeout(long millis) {
+        CompletableFuture<String> cf = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(millis * 5);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException(e);
+            }
+            return "done";
+        });
+        CompletableFuture<String> timed = cf.orTimeout(millis, TimeUnit.MILLISECONDS);
+        return timed.join();
+    }
+
+    private static CompletableFuture<Integer> next(int x) {
+        return CompletableFuture.supplyAsync(() -> x + 1);
+    }
+
+    public static CompletableFuture<CompletableFuture<CompletableFuture<Integer>>> applyNested(int n) {
+        CompletableFuture<Integer> cf0 = CompletableFuture.supplyAsync(() -> n);
+        CompletableFuture<CompletableFuture<Integer>> cf1 = cf0.thenApply(x -> next(x)); // x -> next(x)
+        CompletableFuture<CompletableFuture<CompletableFuture<Integer>>> cf2 = cf1.thenApply(x -> x.thenApply(y -> next(y)));
+        return cf2;
+    }
+
+    // 5b: 扁平化（用 thenCompose）
+    public static CompletableFuture<Integer> composeFlat(int n) {
+        CompletableFuture<Integer> cf0 = CompletableFuture.supplyAsync(() -> n);
+        CompletableFuture<Integer> cf1 = cf0.thenCompose(x -> next(x)); // x -> next(x)
+        CompletableFuture<Integer> cf2 = cf1.thenCompose(x -> next(x));
+        return cf2;
     }
 
 }
