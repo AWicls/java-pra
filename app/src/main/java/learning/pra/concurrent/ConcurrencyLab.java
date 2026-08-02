@@ -3,6 +3,7 @@ package learning.pra.concurrent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -184,6 +185,13 @@ public class ConcurrencyLab {
 
         return sum;
 
+    }
+
+    public int asyncSum(int a, int b) {
+        CompletableFuture<Integer> cfA = CompletableFuture.supplyAsync(() -> a);
+        CompletableFuture<Integer> cfB = CompletableFuture.supplyAsync(() -> b);
+        CompletableFuture<Integer> sum = cfA.thenCombine(cfB, (x, y) -> x + y);
+        return sum.join();
     }
 
 }

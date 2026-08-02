@@ -64,4 +64,13 @@ public class ConcurrencyLabTest {
         int result = lab.virtualThreadSum(100);
         assertEquals(4950, result, "0+1+...+99 = 4950");
     }
+
+    @Test
+    @DisplayName("补强1: asyncSum 两个异步任务求和")
+    void asyncSum_两个异步求和() {
+        ConcurrencyLab lab = new ConcurrencyLab();
+        assertEquals(8, lab.asyncSum(3, 5), "3 + 5 = 8");
+        assertEquals(0, lab.asyncSum(0, 0), "0 + 0 = 0");
+        assertEquals(-1, lab.asyncSum(2, -3), "2 + (-3) = -1");
+    }
 }
