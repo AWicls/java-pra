@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 public class ConcurrencyLab {
 
@@ -192,6 +193,25 @@ public class ConcurrencyLab {
         CompletableFuture<Integer> cfB = CompletableFuture.supplyAsync(() -> b);
         CompletableFuture<Integer> sum = cfA.thenCombine(cfB, (x, y) -> x + y);
         return sum.join();
+    }
+
+    public List<String> gatherAll(List<Supplier<String>> suppliers) {
+        List<CompletableFuture<String>> futures = new ArrayList<>();
+        for (Supplier<String> supplier : suppliers) {
+            futures.add(CompletableFuture.supplyAsync(supplier));
+        }
+
+        CompletableFuture<Void> all = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+
+        all.join();
+
+        List<String> results = new ArrayList<>();
+
+        for (CompletableFuture<String> future : futures) {
+            results.add(future.join());
+        }
+
+        return results;
     }
 
 }
