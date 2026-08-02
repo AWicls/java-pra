@@ -95,4 +95,23 @@ public class ConcurrencyLabTest {
         List<String> result = lab.gatherAll(List.of());
         assertTrue(result.isEmpty(), "空输入应返回空列表");
     }
+
+    @Test
+    @DisplayName("补强3: withFallback 异常时返回降级值")
+    void withFallback_异常时返回fallback() {
+        ConcurrencyLab lab = new ConcurrencyLab();
+        String result = lab.withFallback(
+            () -> { throw new RuntimeException("boom"); },
+            "价格暂不可用"
+        );
+        assertEquals("价格暂不可用", result, "异常时应返回 fallback");
+    }
+
+    @Test
+    @DisplayName("补强3: withFallback 正常时返回原值")
+    void withFallback_正常时返回原值() {
+        ConcurrencyLab lab = new ConcurrencyLab();
+        String result = lab.withFallback(() -> "￥99", "价格暂不可用");
+        assertEquals("￥99", result, "正常时应返回原值，不走 fallback");
+    }
 }

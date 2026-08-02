@@ -214,4 +214,10 @@ public class ConcurrencyLab {
         return results;
     }
 
+    public String withFallback(Supplier<String> failing, String fallback) {
+        CompletableFuture<String> cf = CompletableFuture.supplyAsync(failing);
+        CompletableFuture<String> safe = cf.exceptionally(ex -> fallback);
+        return safe.join();
+    }
+
 }
