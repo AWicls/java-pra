@@ -303,9 +303,33 @@ graph TD
 4. **`Future`/`CompletableFuture` 不熟**：任务 6 留了尾巴，异步编程要专项补强
 
 ### 明天计划
-- 补强 `Collectors` 和 `Collections` 工具类的常用方法
-- 补强异步编程：`CompletableFuture`（第五课留的尾巴）
-- 或第六课：IO 与文件（NIO.2 / Path / Files）
+- ~~补强 `Collectors` 和 `Collections` 工具类的常用方法~~
+- ~~补强异步编程：`CompletableFuture`（第五课留的尾巴）~~ ✅ 已完成（6 个补强任务全绿）
+- ~~或第六课：IO 与文件（NIO.2 / Path / Files）~~
+
+### CompletableFuture 补强完成记录（2026-08-02）
+
+6 个任务全绿（[ConcurrencyLab.java](app/src/main/java/learning/pra/concurrent/ConcurrencyLab.java) 内 `asyncSum` / `gatherAll` / `withFallback` / `withTimeout` / `applyNested` / `composeFlat`，15 个测试通过）：
+
+| # | 任务 | 核心 API | 心智点 |
+|---|------|---------|--------|
+| 1 | `asyncSum` | `supplyAsync` + `thenCombine` + `join` | 二元并行组合 |
+| 2 | `gatherAll` | `allOf` + 顺序 `join` | N 元组合 + `allOf` 不带结果 |
+| 3 | `withFallback` | `exceptionally` | 异常降级，吞异常返回 fallback |
+| 4 | `withTimeout` | `orTimeout` + `TimeUnit.MILLISECONDS` | 超时异常包装链 cause=TimeoutException |
+| 5a | `applyNested` | `thenApply` 链式 | 嵌套地狱：要 3 层 lambda 内嵌 thenApply |
+| 5b | `composeFlat` | `thenCompose` 链式 | 扁平化：永远 1 层，CF 的 flatMap |
+
+**核心心智**：
+- CF 是声明式异步流水线：创建（`supplyAsync`）+ 编排（`thenApply`/`thenCompose`/`thenCombine`/`allOf`）+ 异常处理（`exceptionally`）+ 取结果（`join`）
+- `thenApply` 返回普通值用，`thenCompose` 返回 CF 用（避免嵌套地狱）
+- `allOf` 返回 `CF<Void>` 不带结果，要自己遍历 join
+- `join` 抛 unchecked `CompletionException`，`get` 抛 checked；纯计算场景用 `join`
+- 异常在 CF 内部不自动传播，`exceptionally` 拦截后返回新 CF（正常完成）
+
+### 后续计划
+- 进入第六课：IO 与文件（NIO.2 / Path / Files）
+- 或继续补强基础库：`Collectors` / `Collections` / `String` 全套
 
 ---
 
@@ -317,6 +341,11 @@ graph TD
 - [x] `AtomicInteger` / `incrementAndGet` / `compareAndSet`（CAS）
 - [x] `BlockingQueue` / `ArrayBlockingQueue` / `put` / `take`
 - [x] 虚拟线程 `Executors.newVirtualThreadPerTaskExecutor()`（JDK 21+）
-- [ ] `CompletableFuture` 异步编程（明天补强）
+- [x] `CompletableFuture` 异步编程（补强完成，6 任务全绿）
+  - `supplyAsync` / `runAsync` / `completedFuture`
+  - `thenApply` / `thenCompose`（区别：返回普通值 vs 返回 CF）
+  - `thenCombine` / `allOf` / `anyOf`（组合多 CF）
+  - `exceptionally` / `handle` / `whenComplete`（异常处理三选一）
+  - `orTimeout` / `completeOnTimeout`（JDK 9+ 超时）
 - [ ] `ReentrantLock` / `Condition`（对比 synchronized）
 - [ ] `wait` / `notify` / `notifyAll` 底层（BlockingQueue 内部用）
