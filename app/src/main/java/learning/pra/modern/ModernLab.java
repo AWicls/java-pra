@@ -52,7 +52,7 @@ public final class ModernLab {
      * 根据对象类型返回描述字符串
      * Integer -> "整数: x"
      * String -> "字符串: s"
-     * List<?> -> "列表: size个元素"
+     * {@code List<?>} -> "列表: size个元素"
      * null -> "空"
      * 其他 -> "未知类型"
      */

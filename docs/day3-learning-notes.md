@@ -1,4 +1,4 @@
-# Java 学习笔记 - Day 3（2026-08-03）
+# Java 学习笔记 - Day 3（2026-08-02）
 
 > 学习项目：java-pra（JDK 25 + Gradle 9.6.1 + JUnit Jupiter 6.0.1）
 > 进度：第六课（异常体系）
