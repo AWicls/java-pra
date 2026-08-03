@@ -123,4 +123,38 @@ class IoLabTest {
             Files.deleteIfExists(dst);
         }
     }
+
+    @Test
+    void sumNumbersFromFile_sumsAllNumbers() throws IOException {
+        Path file = newTempFile("sum-" + System.nanoTime() + ".txt");
+        try {
+            IoLab.writeTextFile(file.toString(), "1\n2\n3\n");
+            assertEquals(6, IoLab.sumNumbersFromFile(file.toString()));
+        } finally {
+            Files.deleteIfExists(file);
+        }
+    }
+
+    @Test
+    void sumNumbersFromFile_emptyFile_returnsZero() throws IOException {
+        Path file = newTempFile("sum-empty-" + System.nanoTime() + ".txt");
+        try {
+            Files.createFile(file);
+            assertEquals(0, IoLab.sumNumbersFromFile(file.toString()));
+        } finally {
+            Files.deleteIfExists(file);
+        }
+    }
+
+    @Test
+    void writeLines_writesEachLine() throws IOException {
+        Path file = newTempFile("lines-" + System.nanoTime() + ".txt");
+        try {
+            IoLab.writeLines(file.toString(), "第一行", "第二行", "第三行");
+            String read = IoLab.readTextFile(file.toString());
+            assertEquals("第一行\n第二行\n第三行\n", read);
+        } finally {
+            Files.deleteIfExists(file);
+        }
+    }
 }
