@@ -64,4 +64,19 @@ class IoLabTest {
             Files.deleteIfExists(file);
         }
     }
+
+    @Test
+    void readTextFileWithBytes_matchesReadTextFile() throws IOException {
+        Path file = newTempFile("bytes-vs-chars-" + System.nanoTime() + ".txt");
+        try {
+            String content = "line1\nline2\n\nline4\n中文content";
+            IoLab.writeTextFile(file.toString(), content);
+            String viaChars = IoLab.readTextFile(file.toString());
+            String viaBytes = IoLab.readTextFileWithBytes(file.toString());
+            assertEquals(viaChars, viaBytes, "字节流+桥 读取结果应与字符流一致");
+            assertEquals("line1\nline2\n\nline4\n中文content\n", viaBytes);
+        } finally {
+            Files.deleteIfExists(file);
+        }
+    }
 }
