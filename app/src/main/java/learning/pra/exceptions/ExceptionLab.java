@@ -9,16 +9,16 @@ import javax.management.RuntimeErrorException;
 public class ExceptionLab {
 
     public static String readFileLine(String path) throws IOException {
-            try(BufferedReader reader = new BufferedReader(new FileReader(path))) {
-                return reader.readLine();
-            }
+        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            return reader.readLine();
         }
+    }
 
-        public static int firstOf(int[] arr) {
-            return arr[0];
-        }
+    public static int firstOf(int[] arr) {
+        return arr[0];
+    }
 
-    static class Resource implements AutoCloseable{
+    static class Resource implements AutoCloseable {
 
         final String name;
 
@@ -48,9 +48,28 @@ public class ExceptionLab {
     public static String finallySwallowsReturn() {
         try {
             return "yes1";
-        }finally{
+        } finally {
             return "finally";
         }
+    }
+
+    public static String loadConfig(String path) {
+        try {
+            return readFileLine(path);
+        } catch (IOException e) {
+            throw new ConfigException("failed to load config", e);
+        }
+    }
+
+    public static Throwable unwrapRoot(Throwable ex) {
+        Throwable current = ex;
+
+        while (current.getCause() != null) {
+            current = current.getCause();
+        }
+
+        return current;
+
     }
 
 }

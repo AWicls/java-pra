@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -16,7 +17,7 @@ class ExceptionLabTest {
 
     @Test
     void readFileLine_returnsFirstLine() throws IOException {
-        Path dir = Path.of("build", "tmp", "exc-lab-test");   // workspace 内可写，沙箱 /tmp 只读
+        Path dir = Path.of("build", "tmp", "exc-lab-test"); // workspace 内可写，沙箱 /tmp 只读
         Files.createDirectories(dir);
         Path file = dir.resolve("test.txt");
         try {
@@ -35,7 +36,7 @@ class ExceptionLabTest {
 
     @Test
     void firstOf_returnsFirstElement() {
-        assertEquals(42, ExceptionLab.firstOf(new int[]{42, 7, 9}));
+        assertEquals(42, ExceptionLab.firstOf(new int[] { 42, 7, 9 }));
     }
 
     @Test
@@ -72,6 +73,63 @@ class ExceptionLabTest {
     @Test
     void finallySwallowsReturn_overridesTryReturnValue() {
         assertEquals("finally", ExceptionLab.finallySwallowsReturn());
+    }
+
+    @Test
+    void loadConfig_validPath_returnsFirstLine() throws IOException {
+        Path dir = Path.of("build", "tmp", "exc-lab-test");
+        Files.createDirectories(dir);
+        Path file = dir.resolve("cfg.txt");
+        try {
+            Files.writeString(file, "key=value\nother");
+            assertEquals("key=value", ExceptionLab.loadConfig(file.toString()));
+        } finally {
+            Files.deleteIfExists(file);
+        }
+    }
+
+    @Test
+    void loadConfig_missingPath_throwsConfigExceptionWithIoCause() {
+        Path missing = Path.of("build", "tmp", "exc-lab-cfg-not-exist-" + System.nanoTime() + ".txt");
+        ConfigException ex = assertThrows(ConfigException.class,
+                () -> ExceptionLab.loadConfig(missing.toString()));
+        assertTrue(ex.getCause() instanceof IOException, "cause 应是 IOException");
+        assertEquals("failed to load config", ex.getMessage());
+    }
+
+    @Test
+    void unwrapRoot_singleLayer_returnsItself() {
+        RuntimeException alone = new RuntimeException("alone");
+        assertSame(alone, ExceptionLab.unwrapRoot(alone));
+    }
+
+    @Test
+    void unwrapRoot_twoLayers_returnsInnerCause() {
+        IOException root = new IOException("io");
+        ConfigException wrapper = new ConfigException("wrapped", root);
+        assertSame(root, ExceptionLab.unwrapRoot(wrapper));
+    }
+
+    @Test
+    void unwrapRoot_threeLayers_returnsDeepestCause() {
+        IllegalArgumentException deepest = new IllegalArgumentException("deepest");
+        IOException middle = new IOException("middle", deepest);
+        ConfigException outer = new ConfigException("outer", middle);
+        assertSame(deepest, ExceptionLab.unwrapRoot(outer));
+    }
+
+    @Test
+    void unwrapRoot_fiveLayers_returnsDeepestCause() {
+        // 5 层嵌套：E <- D <- C <- B <- A
+        IllegalStateException deepest = new IllegalStateException("L5");
+        IllegalAccessError l4 = new IllegalAccessError("L4");
+        l4.initCause(deepest);
+        NumberFormatException l3 = new NumberFormatException("L3");
+        l3.initCause(l4);
+        ClassCastException l2 = new ClassCastException("L2");
+        l2.initCause(l3);
+        ConfigException outer = new ConfigException("L1", l2);
+        assertSame(deepest, ExceptionLab.unwrapRoot(outer));
     }
 
     private static String captureStdout(Runnable action) {
