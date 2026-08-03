@@ -79,4 +79,48 @@ class IoLabTest {
             Files.deleteIfExists(file);
         }
     }
+
+    @Test
+    void copyFile_makesIdenticalCopy() throws IOException {
+        Path src = newTempFile("copy-src-" + System.nanoTime() + ".bin");
+        Path dst = newTempFile("copy-dst-" + System.nanoTime() + ".bin");
+        try {
+            byte[] content = new byte[30000];   // 超过 8KB 缓冲，验证分块拷贝
+            for (int i = 0; i < content.length; i++) {
+                content[i] = (byte) (i % 256);
+            }
+            Files.write(src, content);
+            IoLab.copyFile(src.toString(), dst.toString());
+            assertEquals(-1, Files.mismatch(src, dst), "复制后两文件应完全相同");
+        } finally {
+            Files.deleteIfExists(src);
+            Files.deleteIfExists(dst);
+        }
+    }
+
+    @Test
+    void copyFile_emptyFile_copies() throws IOException {
+        Path src = newTempFile("copy-empty-src-" + System.nanoTime() + ".bin");
+        Path dst = newTempFile("copy-empty-dst-" + System.nanoTime() + ".bin");
+        try {
+            Files.createFile(src);   // 显式创建空文件
+            IoLab.copyFile(src.toString(), dst.toString());
+            assertEquals(0, Files.size(dst), "空文件复制后应为空");
+            assertEquals(-1, Files.mismatch(src, dst));
+        } finally {
+            Files.deleteIfExists(src);
+            Files.deleteIfExists(dst);
+        }
+    }
+
+    @Test
+    void copyFile_missingSource_throwsIOException() throws IOException {
+        Path src = Path.of("build", "tmp", "io-copy-not-exist-" + System.nanoTime() + ".bin");
+        Path dst = newTempFile("copy-missing-dst-" + System.nanoTime() + ".bin");
+        try {
+            assertThrows(IOException.class, () -> IoLab.copyFile(src.toString(), dst.toString()));
+        } finally {
+            Files.deleteIfExists(dst);
+        }
+    }
 }
