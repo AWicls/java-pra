@@ -157,4 +157,60 @@ class IoLabTest {
             Files.deleteIfExists(file);
         }
     }
+
+    @Test
+    void readTextFileNio_returnsRawContent() throws IOException {
+        Path file = newTempFile("nio-read-" + System.nanoTime() + ".txt");
+        try {
+            IoLab.writeTextFile(file.toString(), "a\nb");
+            // readString 不补末尾换行，返回原始内容
+            assertEquals("a\nb", IoLab.readTextFileNio(file.toString()));
+        } finally {
+            Files.deleteIfExists(file);
+        }
+    }
+
+    @Test
+    void copyFileNio_makesIdenticalCopy() throws IOException {
+        Path src = newTempFile("nio-copy-src-" + System.nanoTime() + ".bin");
+        Path dst = newTempFile("nio-copy-dst-" + System.nanoTime() + ".bin");
+        try {
+            byte[] content = new byte[20000];
+            for (int i = 0; i < content.length; i++) {
+                content[i] = (byte) i;
+            }
+            Files.write(src, content);
+            IoLab.copyFileNio(src.toString(), dst.toString());
+            assertEquals(-1, Files.mismatch(src, dst), "复制后应完全相同");
+        } finally {
+            Files.deleteIfExists(src);
+            Files.deleteIfExists(dst);
+        }
+    }
+
+    @Test
+    void copyFileNio_overwritesExisting() throws IOException {
+        Path src = newTempFile("nio-ov-src-" + System.nanoTime() + ".bin");
+        Path dst = newTempFile("nio-ov-dst-" + System.nanoTime() + ".bin");
+        try {
+            Files.writeString(src, "new data");
+            Files.writeString(dst, "old data");
+            IoLab.copyFileNio(src.toString(), dst.toString());
+            assertEquals("new data", Files.readString(dst), "REPLACE_EXISTING 应覆盖旧内容");
+        } finally {
+            Files.deleteIfExists(src);
+            Files.deleteIfExists(dst);
+        }
+    }
+
+    @Test
+    void copyFileNio_missingSource_throwsIOException() throws IOException {
+        Path src = Path.of("build", "tmp", "io-nio-copy-not-exist-" + System.nanoTime() + ".bin");
+        Path dst = newTempFile("nio-copy-missing-dst-" + System.nanoTime() + ".bin");
+        try {
+            assertThrows(IOException.class, () -> IoLab.copyFileNio(src.toString(), dst.toString()));
+        } finally {
+            Files.deleteIfExists(dst);
+        }
+    }
 }

@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Scanner;
 
 public class IoLab {
@@ -78,6 +79,14 @@ public class IoLab {
                 writer.println(string);
             }
         }
+    }
+
+    public static String readTextFileNio(String path) throws IOException {
+        return Files.readString(Path.of(path));
+    }
+
+    public static void copyFileNio(String src, String dst) throws IOException {
+        Files.copy(Path.of(src), Path.of(dst), StandardCopyOption.REPLACE_EXISTING);
     }
 
 }
