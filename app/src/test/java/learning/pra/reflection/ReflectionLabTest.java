@@ -185,4 +185,78 @@ class ReflectionLabTest {
         assertTrue(ite.getCause() instanceof IllegalStateException);
         assertEquals("boom-inner", ite.getCause().getMessage());
     }
+
+    // ========== newInstance 测试 ==========
+
+    /** 测试辅助类：含 public / private / 重载 构造器 */
+    static class Person {
+        String name;
+        int age;
+
+        public Person() {
+            this.name = "default";
+            this.age = 0;
+        }
+
+        public Person(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        private Person(String name) {
+            this.name = name;
+            this.age = -1;
+        }
+
+        public Person(int age, String name) {
+            this.name = name + "-reversed";
+            this.age = age;
+        }
+    }
+
+    @Test
+    void newInstance_noArgConstructor() throws Exception {
+        Person p = ReflectionLab.newInstance(Person.class);
+        assertEquals("default", p.name);
+        assertEquals(0, p.age);
+    }
+
+    @Test
+    void newInstance_publicConstructorWithArgs() throws Exception {
+        Person p = ReflectionLab.newInstance(Person.class, "alice", 30);
+        assertEquals("alice", p.name);
+        assertEquals(30, p.age);
+    }
+
+    @Test
+    void newInstance_privateConstructor_setAccessibleWorks() throws Exception {
+        Person p = ReflectionLab.newInstance(Person.class, "bob");
+        assertEquals("bob", p.name);
+        assertEquals(-1, p.age);
+    }
+
+    @Test
+    void newInstance_overloadedConstructor_distinguishesByParamOrder() throws Exception {
+        // (String, int) 和 (int, String) 是不同构造器，通过 unwrap 推断类型区分
+        Person p = ReflectionLab.newInstance(Person.class, 25, "carol");
+        assertEquals("carol-reversed", p.name);
+        assertEquals(25, p.age);
+    }
+
+    @Test
+    void newInstance_nonExistentConstructor_throwsNoSuchMethod() {
+        assertThrows(NoSuchMethodException.class,
+                () -> ReflectionLab.newInstance(Person.class, 3.14));
+    }
+
+    @Test
+    void newInstance_abstractClass_throwsInstantiationException() {
+        // 用项目内抽象类，避免 JDK 模块系统的 InaccessibleObjectException
+        assertThrows(InstantiationException.class,
+                () -> ReflectionLab.newInstance(AbstractShape.class));
+    }
+
+    /** 测试用抽象类 */
+    static abstract class AbstractShape {
+    }
 }
