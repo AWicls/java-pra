@@ -2,6 +2,7 @@ package learning.pra.reflection;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -101,5 +102,87 @@ class ReflectionLabTest {
     void readField_nullObj_throwsNPE() {
         // obj.getClass() 直接触发 NPE，先于 NoSuchFieldException
         assertThrows(NullPointerException.class, () -> ReflectionLab.readField(null, "any"));
+    }
+
+    // ========== invokeMethod 测试 ==========
+
+    /** 测试辅助类：含重载 / private / 静态 / 异常方法 */
+    static class Calc {
+        public int add(int a, int b) {
+            return a + b;
+        }
+
+        public String add(String a, String b) {
+            return a + b;
+        }
+
+        private String secret() {
+            return "hidden";
+        }
+
+        private int square(int n) {
+            return n * n;
+        }
+
+        public static int staticMultiply(int a, int b) {
+            return a * b;
+        }
+
+        public void boom() {
+            throw new IllegalStateException("boom-inner");
+        }
+    }
+
+    @Test
+    void invokeMethod_overload_intParams() throws Exception {
+        Calc c = new Calc();
+        Object result = ReflectionLab.invokeMethod(c, "add", 3, 5);
+        assertEquals(8, result);   // int 装箱为 Integer，unwrap 还原为 int.class
+    }
+
+    @Test
+    void invokeMethod_overload_stringParams_distinguishesOverload() throws Exception {
+        Calc c = new Calc();
+        Object result = ReflectionLab.invokeMethod(c, "add", "Hello", "World");
+        assertEquals("HelloWorld", result);   // 重载选择 String 版本
+    }
+
+    @Test
+    void invokeMethod_privateMethod_setAccessibleWorks() throws Exception {
+        Calc c = new Calc();
+        Object result = ReflectionLab.invokeMethod(c, "secret");
+        assertEquals("hidden", result);
+    }
+
+    @Test
+    void invokeMethod_privateMethodWithArgs() throws Exception {
+        Calc c = new Calc();
+        Object result = ReflectionLab.invokeMethod(c, "square", 4);
+        assertEquals(16, result);
+    }
+
+    @Test
+    void invokeMethod_noArgMethod() throws Exception {
+        Calc c = new Calc();
+        Object result = ReflectionLab.invokeMethod(c, "secret");
+        assertEquals("hidden", result);
+    }
+
+    @Test
+    void invokeMethod_nonExistent_throwsNoSuchMethod() {
+        Calc c = new Calc();
+        assertThrows(NoSuchMethodException.class, () -> ReflectionLab.invokeMethod(c, "noSuch"));
+    }
+
+    @Test
+    void invokeMethod_innerException_wrappedInInvocationTargetException() {
+        Calc c = new Calc();
+        // 被调方法内部抛 IllegalStateException，被包成 InvocationTargetException
+        InvocationTargetException ite = assertThrows(
+                InvocationTargetException.class,
+                () -> ReflectionLab.invokeMethod(c, "boom"));
+        // 解包验证：真实异常在 getCause()
+        assertTrue(ite.getCause() instanceof IllegalStateException);
+        assertEquals("boom-inner", ite.getCause().getMessage());
     }
 }
