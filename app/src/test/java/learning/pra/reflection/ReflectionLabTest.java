@@ -60,4 +60,46 @@ class ReflectionLabTest {
     void classInfo_nullInput_throwsNPE() {
         assertThrows(NullPointerException.class, () -> ReflectionLab.classInfo(null));
     }
+
+    // ========== readField 测试 ==========
+
+    /** 测试辅助类：含 public / private / 基本类型 字段 */
+    static class Sample {
+        public String name = "alice";
+        private int age = 30;
+        private boolean active = true;
+    }
+
+    @Test
+    void readField_publicField() throws NoSuchFieldException, IllegalAccessException {
+        Sample s = new Sample();
+        Object value = ReflectionLab.readField(s, "name");
+        assertEquals("alice", value);
+    }
+
+    @Test
+    void readField_privateField_setAccessibleWorks() throws NoSuchFieldException, IllegalAccessException {
+        Sample s = new Sample();
+        Object value = ReflectionLab.readField(s, "age");
+        assertEquals(30, value);   // 基本类型自动装箱为 Integer
+    }
+
+    @Test
+    void readField_privateBooleanField() throws NoSuchFieldException, IllegalAccessException {
+        Sample s = new Sample();
+        Object value = ReflectionLab.readField(s, "active");
+        assertEquals(true, value);   // 基本类型 boolean 装箱为 Boolean
+    }
+
+    @Test
+    void readField_nonExistent_throwsNoSuchField() {
+        Sample s = new Sample();
+        assertThrows(NoSuchFieldException.class, () -> ReflectionLab.readField(s, "noSuchField"));
+    }
+
+    @Test
+    void readField_nullObj_throwsNPE() {
+        // obj.getClass() 直接触发 NPE，先于 NoSuchFieldException
+        assertThrows(NullPointerException.class, () -> ReflectionLab.readField(null, "any"));
+    }
 }

@@ -1,5 +1,6 @@
 package learning.pra.reflection;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -21,4 +22,9 @@ public class ReflectionLab {
         return map;
     }
 
+    public static Object readField(Object obj, String fieldName) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        Field fx = obj.getClass().getDeclaredField(fieldName);
+        fx.setAccessible(true);
+        return fx.get(obj);
+    }
 }
