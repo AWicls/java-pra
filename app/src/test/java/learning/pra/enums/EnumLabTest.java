@@ -36,22 +36,22 @@ class EnumLabTest {
     @DisplayName("allNames: values() 顺序即声明顺序")
     class AllNamesTest {
         @Test
-        @DisplayName("返回 [RED, GREEN, YELLOW]")
+        @DisplayName("返回 [红灯, 绿灯, 黄灯]（allNames 用 getDisplayName）")
         void returnsAllInDeclarationOrder() {
             List<String> names = EnumLab.allNames();
             assertEquals(3, names.size(), "应正好三个常量");
-            assertEquals("RED", names.get(0));
-            assertEquals("GREEN", names.get(1));
-            assertEquals("YELLOW", names.get(2));
+            assertEquals("红灯", names.get(0));
+            assertEquals("绿灯", names.get(1));
+            assertEquals("黄灯", names.get(2));
         }
 
         @Test
-        @DisplayName("用 contains 验证三个名字都在")
+        @DisplayName("用 contains 验证三个中文名都在")
         void containsAllNames() {
             List<String> names = EnumLab.allNames();
-            assertTrue(names.contains("RED"));
-            assertTrue(names.contains("GREEN"));
-            assertTrue(names.contains("YELLOW"));
+            assertTrue(names.contains("红灯"));
+            assertTrue(names.contains("绿灯"));
+            assertTrue(names.contains("黄灯"));
         }
     }
 
@@ -119,10 +119,17 @@ class EnumLabTest {
         }
 
         @Test
-        @DisplayName("toString 默认同 name()")
-        void toStringDefaultsToName() {
-            assertEquals(EnumLab.TrafficLight.RED.name(),
-                    EnumLab.TrafficLight.RED.toString());
+        @DisplayName("toString 已被覆盖，返回 displayName（不再是 name）")
+        void toStringOverriddenToDisplayName() {
+            assertEquals("红灯", EnumLab.TrafficLight.RED.toString());
+            assertEquals("绿灯", EnumLab.TrafficLight.GREEN.toString());
+            assertEquals("黄灯", EnumLab.TrafficLight.YELLOW.toString());
+        }
+
+        @Test
+        @DisplayName("name() 仍是英文名（不受 toString 覆盖影响）")
+        void nameStillEnglish() {
+            assertEquals("RED", EnumLab.TrafficLight.RED.name());
         }
 
         @Test
@@ -141,6 +148,70 @@ class EnumLabTest {
                     "RED 在 GREEN 前，compareTo 返回负数");
             assertTrue(EnumLab.TrafficLight.YELLOW.compareTo(EnumLab.TrafficLight.GREEN) > 0,
                     "YELLOW 在 GREEN 后，compareTo 返回正数");
+        }
+    }
+
+    @Nested
+    @DisplayName("§10.2 字段/构造器/方法")
+    class FieldsAndConstructorTest {
+        @Test
+        @DisplayName("每个常量携带 displayName 字段")
+        void carriesDisplayName() {
+            assertEquals("红灯", EnumLab.TrafficLight.RED.getDisplayName());
+            assertEquals("绿灯", EnumLab.TrafficLight.GREEN.getDisplayName());
+            assertEquals("黄灯", EnumLab.TrafficLight.YELLOW.getDisplayName());
+        }
+
+        @Test
+        @DisplayName("每个常量携带 durationSeconds 字段")
+        void carriesDurationSeconds() {
+            assertEquals(30, EnumLab.TrafficLight.RED.getDurationSeconds());
+            assertEquals(25, EnumLab.TrafficLight.GREEN.getDurationSeconds());
+            assertEquals(5, EnumLab.TrafficLight.YELLOW.getDurationSeconds());
+        }
+
+        @Test
+        @DisplayName("name() 与 getDisplayName() 独立：name 不受字段影响")
+        void nameIndependentOfDisplayName() {
+            assertNotEquals(EnumLab.TrafficLight.RED.name(),
+                    EnumLab.TrafficLight.RED.getDisplayName(),
+                    "name() 返回 RED，getDisplayName() 返回 红灯，两者不同");
+        }
+    }
+
+    @Nested
+    @DisplayName("§10.2 byDuration: 按秒数反查枚举")
+    class ByDurationTest {
+        @Test
+        @DisplayName("byDuration(30) 返回 RED")
+        void findsRedByDuration() {
+            assertSame(EnumLab.TrafficLight.RED, EnumLab.TrafficLight.byDuration(30));
+        }
+
+        @Test
+        @DisplayName("byDuration(5) 返回 YELLOW")
+        void findsYellowByDuration() {
+            assertSame(EnumLab.TrafficLight.YELLOW, EnumLab.TrafficLight.byDuration(5));
+        }
+
+        @Test
+        @DisplayName("byDuration 找不到返回 null（不抛异常）")
+        void returnsNullWhenNotFound() {
+            assertNull(EnumLab.TrafficLight.byDuration(999));
+            assertNull(EnumLab.TrafficLight.byDuration(0));
+        }
+    }
+
+    @Nested
+    @DisplayName("§10.2 allNames 行为：用 getDisplayName 返回中文名（已合并到 AllNamesTest）")
+    class AllNamesAfterToStringOverrideTest {
+        @Test
+        @DisplayName("allNames 因 getDisplayName 返回中文名，顺序与声明一致")
+        void returnsDisplayNamesInOrder() {
+            List<String> names = EnumLab.allNames();
+            assertEquals("红灯", names.get(0));
+            assertEquals("绿灯", names.get(1));
+            assertEquals("黄灯", names.get(2));
         }
     }
 }
