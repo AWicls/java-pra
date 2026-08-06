@@ -1,6 +1,8 @@
 package learning.pra.enums;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.List;
 
 public class EnumLab {
@@ -93,5 +95,41 @@ public class EnumLab {
         };
 
         public abstract double apply(double a, double b);
+    }
+
+    // 新增枚举 Permission
+    public enum Permission {
+        READ, WRITE, DELETE, EXECUTE
+    }
+
+    // 1. 用 EnumSet 表示用户权限集合
+    public static EnumSet<Permission> adminPermissions() {
+        return EnumSet.allOf(Permission.class); // 用 allOf 工厂：管理员拥有所有权限
+    }
+
+    public static EnumSet<Permission> guestPermissions() {
+        return EnumSet.of(Permission.READ); // 用 of 工厂：访客只有 READ
+    }
+
+    // 2. 用 EnumMap 给每个权限配中文描述
+    public static EnumMap<Permission, String> permissionDescriptions() {
+        EnumMap<Permission, String> desc = new EnumMap<>(Permission.class); // new EnumMap<>(Permission.class)
+        desc.put(Permission.READ, "读取");
+        desc.put(Permission.WRITE, "写入");
+        desc.put(Permission.DELETE, "删除");
+        desc.put(Permission.EXECUTE, "执行");
+        return desc;
+    }
+
+    // 3. 检查用户是否有某权限
+    public static boolean hasPermission(EnumSet<Permission> userPerms, Permission required) {
+        return userPerms.contains(required); // EnumSet.contains 即可
+    }
+
+    // 4. 给用户加权限（返回新 Set，不改原 Set）
+    public static EnumSet<Permission> grantPermission(EnumSet<Permission> userPerms, Permission newPerm) {
+        EnumSet<Permission> copy = EnumSet.copyOf(userPerms); // 先拷贝
+        copy.add(newPerm); // 再加
+        return copy;
     }
 }

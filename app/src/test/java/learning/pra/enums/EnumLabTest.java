@@ -4,6 +4,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.List;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -276,6 +280,103 @@ class EnumLabTest {
                 assertTrue(Double.isFinite(result) || Double.isInfinite(result),
                         op.name() + " apply 应返回有效数值");
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("§10.4 EnumSet / EnumMap")
+    class EnumSetEnumMapTest {
+        @Test
+        @DisplayName("adminPermissions 含全部 4 个权限")
+        void adminHasAllPermissions() {
+            EnumSet<EnumLab.Permission> admin = EnumLab.adminPermissions();
+            assertEquals(4, admin.size());
+            assertTrue(admin.contains(EnumLab.Permission.READ));
+            assertTrue(admin.contains(EnumLab.Permission.WRITE));
+            assertTrue(admin.contains(EnumLab.Permission.DELETE));
+            assertTrue(admin.contains(EnumLab.Permission.EXECUTE));
+        }
+
+        @Test
+        @DisplayName("guestPermissions 只含 READ")
+        void guestHasOnlyRead() {
+            EnumSet<EnumLab.Permission> guest = EnumLab.guestPermissions();
+            assertEquals(1, guest.size());
+            assertTrue(guest.contains(EnumLab.Permission.READ));
+            assertFalse(guest.contains(EnumLab.Permission.WRITE));
+            assertFalse(guest.contains(EnumLab.Permission.DELETE));
+            assertFalse(guest.contains(EnumLab.Permission.EXECUTE));
+        }
+
+        @Test
+        @DisplayName("hasPermission: 访客没 WRITE 权限")
+        void guestHasNoWritePermission() {
+            assertFalse(EnumLab.hasPermission(EnumLab.guestPermissions(), EnumLab.Permission.WRITE));
+            assertTrue(EnumLab.hasPermission(EnumLab.guestPermissions(), EnumLab.Permission.READ));
+        }
+
+        @Test
+        @DisplayName("hasPermission: 管理员有全部权限")
+        void adminHasAllPermissionChecks() {
+            EnumSet<EnumLab.Permission> admin = EnumLab.adminPermissions();
+            for (EnumLab.Permission p : EnumLab.Permission.values()) {
+                assertTrue(EnumLab.hasPermission(admin, p), "管理员应有 " + p);
+            }
+        }
+
+        @Test
+        @DisplayName("permissionDescriptions.get(DELETE) 返回 删除")
+        void permissionDescriptionsMapping() {
+            EnumMap<EnumLab.Permission, String> desc = EnumLab.permissionDescriptions();
+            assertEquals("读取", desc.get(EnumLab.Permission.READ));
+            assertEquals("写入", desc.get(EnumLab.Permission.WRITE));
+            assertEquals("删除", desc.get(EnumLab.Permission.DELETE));
+            assertEquals("执行", desc.get(EnumLab.Permission.EXECUTE));
+        }
+
+        @Test
+        @DisplayName("EnumMap 大小 == 枚举值数")
+        void enumMapSizeMatchesEnumCount() {
+            assertEquals(4, EnumLab.permissionDescriptions().size());
+        }
+
+        @Test
+        @DisplayName("grantPermission 返回新 Set，原 Set 不变")
+        void grantPermissionDoesNotMutateOriginal() {
+            EnumSet<EnumLab.Permission> guest = EnumLab.guestPermissions();
+            EnumSet<EnumLab.Permission> granted = EnumLab.grantPermission(guest, EnumLab.Permission.WRITE);
+
+            // 新 Set 应含 READ + WRITE
+            assertEquals(2, granted.size());
+            assertTrue(granted.contains(EnumLab.Permission.WRITE));
+            // 原 Set 仍只有 READ（拷贝验证）
+            assertEquals(1, guest.size());
+            assertFalse(guest.contains(EnumLab.Permission.WRITE));
+        }
+
+        @Test
+        @DisplayName("EnumSet 迭代顺序 = 枚举声明顺序（非插入顺序）")
+        void enumSetIterationIsDeclarationOrder() {
+            EnumSet<EnumLab.Permission> custom = EnumSet.of(
+                    EnumLab.Permission.EXECUTE,   // 故意倒序插入
+                    EnumLab.Permission.READ,
+                    EnumLab.Permission.DELETE,
+                    EnumLab.Permission.WRITE
+            );
+            // 迭代应按 ordinal 顺序: READ(0), WRITE(1), DELETE(2), EXECUTE(3)
+            java.util.List<EnumLab.Permission> iter = new java.util.ArrayList<>(custom);
+            assertEquals(EnumLab.Permission.READ,    iter.get(0));
+            assertEquals(EnumLab.Permission.WRITE,   iter.get(1));
+            assertEquals(EnumLab.Permission.DELETE,  iter.get(2));
+            assertEquals(EnumLab.Permission.EXECUTE, iter.get(3));
+        }
+
+        @Test
+        @DisplayName("EnumSet.of 顺序无关，containsAll 一致")
+        void enumSetOrderIndependent() {
+            EnumSet<EnumLab.Permission> a = EnumSet.of(EnumLab.Permission.READ, EnumLab.Permission.WRITE);
+            EnumSet<EnumLab.Permission> b = EnumSet.of(EnumLab.Permission.WRITE, EnumLab.Permission.READ);
+            assertEquals(a, b, "EnumSet 不关心插入顺序，内容相等即相等");
         }
     }
 }
