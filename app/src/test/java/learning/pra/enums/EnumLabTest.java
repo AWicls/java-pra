@@ -477,4 +477,104 @@ class EnumLabTest {
             assertNotSame(a, b, "普通类反射能创建不同实例 -> 枚举的免疫才是特殊的");
         }
     }
+
+    @Nested
+    @DisplayName("§10.6 策略模式: 支付方式")
+    class PaymentStrategyTest {
+
+        @Test
+        @DisplayName("ALIPAY 支付宝: 1% 手续费")
+        void alipayFee() {
+            EnumLab.PayResult r = EnumLab.PaymentMethod.ALIPAY.pay(100);
+            assertTrue(r.success());
+            assertEquals(99.0, r.actualAmount(), 0.001);   // 100 * (1 - 0.01)
+            assertTrue(r.message().contains("支付宝"));
+            assertTrue(r.message().contains("即时到账"));
+        }
+
+        @Test
+        @DisplayName("WECHAT 微信: 0.5% 手续费")
+        void wechatFee() {
+            EnumLab.PayResult r = EnumLab.PaymentMethod.WECHAT.pay(100);
+            assertTrue(r.success());
+            assertEquals(99.5, r.actualAmount(), 0.001);   // 100 * (1 - 0.005)
+            assertTrue(r.message().contains("微信"));
+        }
+
+        @Test
+        @DisplayName("BANK_CARD 银行卡: 固定 2 元手续费")
+        void bankCardFixedFee() {
+            EnumLab.PayResult r = EnumLab.PaymentMethod.BANK_CARD.pay(100);
+            assertTrue(r.success());
+            assertEquals(98.0, r.actualAmount(), 0.001);   // 100 - 2
+            assertTrue(r.message().contains("T+1"));
+        }
+
+        @Test
+        @DisplayName("CREDIT_CARD 信用卡: 3% 手续费")
+        void creditCardFee() {
+            EnumLab.PayResult r = EnumLab.PaymentMethod.CREDIT_CARD.pay(100);
+            assertTrue(r.success());
+            assertEquals(97.0, r.actualAmount(), 0.001);   // 100 * (1 - 0.03)
+            assertTrue(r.message().contains("T+3"));
+        }
+
+        @Test
+        @DisplayName("限额边界: 刚好等于限额 -> 成功")
+        void atLimitSucceeds() {
+            EnumLab.PayResult r = EnumLab.PaymentMethod.ALIPAY.pay(50000);
+            assertTrue(r.success(), "刚好等于限额应成功");
+        }
+
+        @Test
+        @DisplayName("限额边界: 超出限额 -> 失败")
+        void overLimitFails() {
+            EnumLab.PayResult r = EnumLab.PaymentMethod.ALIPAY.pay(50001);
+            assertFalse(r.success(), "超出限额应失败");
+            assertEquals(0.0, r.actualAmount(), 0.001, "失败时 actualAmount=0");
+            assertTrue(r.message().contains("超过单笔限额"), "应提示限额信息");
+        }
+
+        @Test
+        @DisplayName("各方式限额不同：信用卡 2 万最低")
+        void differentLimits() {
+            assertEquals(50000, EnumLab.PaymentMethod.ALIPAY.getLimit());
+            assertEquals(30000, EnumLab.PaymentMethod.WECHAT.getLimit());
+            assertEquals(100000, EnumLab.PaymentMethod.BANK_CARD.getLimit());
+            assertEquals(20000, EnumLab.PaymentMethod.CREDIT_CARD.getLimit());
+        }
+
+        @Test
+        @DisplayName("上下文切换策略: 同一 context 切 method 后行为变化")
+        void contextSwitchesStrategy() {
+            EnumLab.PaymentContext ctx = new EnumLab.PaymentContext(EnumLab.PaymentMethod.ALIPAY);
+            EnumLab.PayResult r1 = ctx.checkout(100);
+            assertEquals(99.0, r1.actualAmount(), 0.001);
+
+            ctx.setMethod(EnumLab.PaymentMethod.BANK_CARD);
+            EnumLab.PayResult r2 = ctx.checkout(100);
+            assertEquals(98.0, r2.actualAmount(), 0.001, "切到银行卡后手续费逻辑变了");
+        }
+
+        @Test
+        @DisplayName("多态遍历: 每个方式都能处理支付")
+        void polymorphicIteration() {
+            for (EnumLab.PaymentMethod m : EnumLab.PaymentMethod.values()) {
+                EnumLab.PayResult r = m.pay(1000);
+                assertNotNull(r);
+                assertTrue(r.success(), m.name() + " 支付 1000 应成功（在限额内）");
+                assertTrue(r.actualAmount() > 0, m.name() + " 应有正的到账金额");
+            }
+        }
+
+        @Test
+        @DisplayName("record 不可变性: success/message/actualAmount 都是 final")
+        void recordImmutable() {
+            EnumLab.PayResult r = new EnumLab.PayResult(true, "test", 100.0);
+            assertTrue(r.success());
+            assertEquals("test", r.message());
+            assertEquals(100.0, r.actualAmount(), 0.001);
+            // record 没有 setter，访问器只读 -> 不可变
+        }
+    }
 }
