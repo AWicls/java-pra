@@ -214,4 +214,68 @@ class EnumLabTest {
             assertEquals("黄灯", names.get(2));
         }
     }
+
+    @Nested
+    @DisplayName("§10.3 Operation: 每常量独立实现抽象方法（策略模式雏形）")
+    class OperationTest {
+        @Test
+        @DisplayName("PLUS 加法")
+        void plus() {
+            assertEquals(5.0, EnumLab.Operation.PLUS.apply(2, 3));
+        }
+
+        @Test
+        @DisplayName("MINUS 减法")
+        void minus() {
+            assertEquals(3.0, EnumLab.Operation.MINUS.apply(5, 2));
+        }
+
+        @Test
+        @DisplayName("TIMES 乘法")
+        void times() {
+            assertEquals(12.0, EnumLab.Operation.TIMES.apply(3, 4));
+        }
+
+        @Test
+        @DisplayName("DIVIDE 除法（正常）")
+        void divide() {
+            assertEquals(5.0, EnumLab.Operation.DIVIDE.apply(10, 2));
+        }
+
+        @Test
+        @DisplayName("DIVIDE 浮点除零返回 Infinity（Java 浮点不抛异常）")
+        void divideByZeroReturnsInfinity() {
+            double result = EnumLab.Operation.DIVIDE.apply(1, 0);
+            assertTrue(Double.isInfinite(result),
+                    "1.0/0.0 应返回 Infinity，实际: " + result);
+        }
+
+        @Test
+        @DisplayName("DIVIDE 零除零返回 NaN")
+        void zeroDividedByZeroReturnsNaN() {
+            double result = EnumLab.Operation.DIVIDE.apply(0, 0);
+            assertTrue(Double.isNaN(result),
+                    "0.0/0.0 应返回 NaN，实际: " + result);
+        }
+
+        @Test
+        @DisplayName("多态调用：Operation 引用调 apply，无需 switch")
+        void polymorphicDispatch() {
+            EnumLab.Operation op = EnumLab.Operation.PLUS;
+            assertEquals(2.0, op.apply(1, 1),
+                    "父类引用调 apply，运行期分到 PLUS 实现");
+        }
+
+        @Test
+        @DisplayName("遍历所有运算，每个都正常返回")
+        void iterateAll() {
+            EnumLab.Operation[] ops = EnumLab.Operation.values();
+            assertEquals(4, ops.length, "应有 4 个运算");
+            for (EnumLab.Operation op : ops) {
+                double result = op.apply(6, 3);
+                assertTrue(Double.isFinite(result) || Double.isInfinite(result),
+                        op.name() + " apply 应返回有效数值");
+            }
+        }
+    }
 }
