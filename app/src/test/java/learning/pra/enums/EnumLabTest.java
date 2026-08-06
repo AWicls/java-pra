@@ -4,10 +4,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import learning.pra.enums.EnumLab.AppConfig;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.EnumMap;
 import java.util.EnumSet;
-import java.util.List;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -377,6 +384,97 @@ class EnumLabTest {
             EnumSet<EnumLab.Permission> a = EnumSet.of(EnumLab.Permission.READ, EnumLab.Permission.WRITE);
             EnumSet<EnumLab.Permission> b = EnumSet.of(EnumLab.Permission.WRITE, EnumLab.Permission.READ);
             assertEquals(a, b, "EnumSet 不关心插入顺序，内容相等即相等");
+        }
+    }
+
+    @Nested
+    @DisplayName("§10.5 枚举单例 + 反射攻击防御")
+    class EnumSingletonTest {
+
+        @Test
+        @DisplayName("INSTANCE 是单例：两次取引用 == 相等")
+        void instanceIsSingleton() {
+            assertSame(AppConfig.INSTANCE, AppConfig.INSTANCE,
+                    "枚举常量天生单例，两次访问必须是同一对象");
+        }
+
+        @Test
+        @DisplayName("AppConfig get/set 基本功能")
+        void configGetSetWorks() {
+            AppConfig cfg = AppConfig.INSTANCE;
+            assertEquals("java-pra", cfg.get("app.name"), "构造器初始化的值应能读到");
+            assertEquals("1.0", cfg.get("app.version"));
+            cfg.set("custom.key", "custom-value");
+            assertEquals("custom-value", cfg.get("custom.key"));
+        }
+
+        @Test
+        @DisplayName("防线 1: 反射 newInstance 攻击 -> 抛 IllegalArgumentException")
+        void reflectAttackFails() throws Exception {
+            // 枚举编译器自动加 (String name, int ordinal) 构造器（呼应 §10.1 字节码）
+            Constructor<AppConfig> c = AppConfig.class.getDeclaredConstructor(String.class, int.class);
+            c.setAccessible(true);                // 破防尝试
+            // JVM 层面硬编码：枚举类的 newInstance 直接拒绝
+            assertThrows(IllegalArgumentException.class,
+                    () -> c.newInstance("FAKE", 0),
+                    "枚举构造器 newInstance 必须抛 IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("防线 2: clone() 被 protected + 模块系统双重保护，外部无法调用")
+        void cloneFails() throws Exception {
+            // Enum.clone() 是 protected final，从 java.lang.Enum 继承
+            // 1) AppConfig 自己没声明 clone（继承父类的）-> getDeclaredMethod 本类找不到
+            assertThrows(NoSuchMethodException.class,
+                    () -> AppConfig.class.getDeclaredMethod("clone"),
+                    "AppConfig 没自己声明 clone，是从 Enum 继承的");
+
+            // 2) clone 是 protected，跨包不可见 -> getMethod（只查 public）也找不到
+            assertThrows(NoSuchMethodException.class,
+                    () -> AppConfig.class.getMethod("clone"),
+                    "clone 是 protected，跨包测试类不可见，getMethod 拿不到");
+
+            // 3) 即使用反射强拿 Enum.clone()，JDK 9+ 模块系统会拦 setAccessible
+            //    （java.base 不 opens java.lang 给 unnamed module -> InaccessibleObjectException）
+            //    这正是 Enum 源码里 clone() final + 抛 CloneNotSupportedException 的双重保险：
+            //    即使模块放开，调 clone 也会抛 CloneNotSupportedException
+            Method cloneMethod = Enum.class.getDeclaredMethod("clone");
+            assertThrows(java.lang.reflect.InaccessibleObjectException.class,
+                    () -> cloneMethod.setAccessible(true),
+                    "JDK 9+ 模块系统拦截：java.base 不 opens java.lang 给外部模块");
+        }
+
+        @Test
+        @DisplayName("防线 3: 反序列化后仍是同一实例（不走 readObject 创建新对象）")
+        void serializationKeepsSingleton() throws Exception {
+            AppConfig original = AppConfig.INSTANCE;
+            // 序列化到内存字节流（用 ByteArrayOutputStream 避开沙箱 /tmp 只读陷阱）
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+                oos.writeObject(original);
+            }
+            byte[] bytes = baos.toByteArray();
+
+            // 反序列化
+            try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
+                AppConfig deserialized = (AppConfig) ois.readObject();
+                // 关键：反序列化后 == 仍成立（JVM 调 valueOf 返回已存在实例，不 new）
+                assertSame(original, deserialized,
+                        "枚举反序列化必须返回同一实例，不能创建新对象");
+            }
+        }
+
+        @Test
+        @DisplayName("对照: 普通类的反射不拒绝创建多实例（反证枚举防御的价值）")
+        void normalClassReflectAttackSucceeds() throws Exception {
+            // 用 ArrayList 做对照：反射能 new 出两个不同实例
+            // 对照点：枚举的 newInstance 被 JVM 硬编码拒绝，普通类不拒绝
+            Constructor<java.util.ArrayList<Object>> c =
+                    (Constructor<java.util.ArrayList<Object>>) (Constructor<?>) java.util.ArrayList.class.getDeclaredConstructor();
+            c.setAccessible(true);
+            java.util.ArrayList<Object> a = c.newInstance();
+            java.util.ArrayList<Object> b = c.newInstance();
+            assertNotSame(a, b, "普通类反射能创建不同实例 -> 枚举的免疫才是特殊的");
         }
     }
 }

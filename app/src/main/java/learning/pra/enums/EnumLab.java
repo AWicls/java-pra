@@ -132,4 +132,23 @@ public class EnumLab {
         copy.add(newPerm); // 再加
         return copy;
     }
+
+    public enum AppConfig {
+        INSTANCE;                              // 单例常量
+
+        private final java.util.Map<String, String> settings = new java.util.HashMap<>();
+
+        AppConfig() {                           // 隐式 private
+            settings.put("app.name", "java-pra");
+            settings.put("app.version", "1.0");
+        }
+
+        public String get(String key) {
+            return settings.get(key);
+        }
+
+        public void set(String key, String value) {
+            settings.put(key, value);
+        }
+    }
 }
