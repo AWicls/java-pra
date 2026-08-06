@@ -1,7 +1,8 @@
-# Java 学习总览 + 学习路线（2026-08-05 整理）
+# Java 学习总览 + 学习路线（2026-08-06 整理）
 
 > 项目：java-pra（JDK 25 + Gradle 9.6.1 + JUnit Jupiter 6.0.1）
-> 起始：2026-07-31 ｜ 已完成：6 天 / 9 课 / 7 个 Lab / 100+ 测试
+> 起始：2026-07-31 ｜ 已完成：7 天 / 10 课 / 8 个 Lab / 156+ 测试
+
 
 ---
 
@@ -46,6 +47,12 @@
 |---|------|------|--------|---------|
 | 9 | 注解 | [AnnotationsLab.java](app/src/main/java/learning/pra/annotations/AnnotationsLab.java) + [ValidatorLab.java](app/src/main/java/learning/pra/annotations/ValidatorLab.java) | 20 | 四个内置注解、`@Target`/`@Retention` 元注解、自定义注解、注解 + 反射实战（表单校验器） |
 
+### Day 7（2026-08-06）｜枚举
+
+| 课 | 主题 | 代码 | 测试数 | 关键掌握 |
+|---|------|------|--------|---------|
+| 10 | 枚举 | [EnumLab.java](app/src/main/java/learning/pra/enums/EnumLab.java) | 56 | 枚举本质（语法糖/`java.lang.Enum`）、字段/构造器/方法、抽象方法（每常量独立实现/策略模式）、`EnumSet`/`EnumMap`、枚举单例+反射防御、策略模式实战（支付方式） |
+
 ---
 
 ## 二、知识掌握度自评（重要：识别薄弱点）
@@ -60,11 +67,12 @@
 | IO 流 | ⭐⭐⭐ | 缺：NIO（`Path`/`Files`/`Channel`）-- 现代项目主流 |
 | 反射 | ⭐⭐⭐⭐ | 已够用 |
 | 注解 | ⭐⭐⭐⭐ | 已够用 |
-| 现代特性 | ⭐⭐ | 仅入门 lambda，缺：Records / Sealed Classes / Pattern Matching / Switch Pattern |
-| **未学** | 枚举 enum | 重要基础，跳过了 |
+| **枚举** | ⭐⭐⭐⭐ | 已学：本质/字段/抽象方法/EnumSet/EnumMap/单例/策略模式；缺：`EnumSet.range` / `EnumMap` 高级用法 |
+| 现代特性 | ⭐⭐ | 仅入门 lambda + 接触 record，缺：Records 深入 / Sealed Classes / Pattern Matching / Switch Pattern |
 | **未学** | `java.time` 日期时间 | 工程必备 |
 | **未学** | `Optional` 深入 | Stream 配套 |
 | **未学** | 设计模式 | 用反射+注解+泛型实现，巩固所学 |
+
 
 ---
 
@@ -77,14 +85,14 @@
 3. **现代特性单独成课**（JDK 25 Records / Sealed / Pattern Matching）
 4. **综合实战收尾**（用反射+注解+泛型+设计模式做一个小框架）
 
-### 第十课：枚举（enum）
+### 第十课：枚举（enum）✅ 已完成（2026-08-06，56 测试）
 
-- 枚举本质（继承自 `java.lang.Enum` 的语法糖）
-- 枚举的字段 / 构造器 / 方法
-- 枚举实现接口、枚举的抽象方法（每常量独立实现）
-- `EnumSet` / `EnumMap`（高性能枚举集合）
-- 枚举单例模式（防反射攻击，呼应第八课）
-- **实战**：用枚举实现策略模式（支付方式 / 状态机入门）
+- ✅ 枚举本质（继承自 `java.lang.Enum` 的语法糖）
+- ✅ 枚举的字段 / 构造器 / 方法
+- ✅ 枚举实现接口、枚举的抽象方法（每常量独立实现）
+- ✅ `EnumSet` / `EnumMap`（高性能枚举集合）
+- ✅ 枚举单例模式（防反射攻击，呼应第八课）
+- ✅ **实战**：用枚举实现策略模式（支付方式）
 
 ### 第十一课：`java.time` 日期时间
 
