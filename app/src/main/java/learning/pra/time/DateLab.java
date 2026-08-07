@@ -48,8 +48,9 @@ public class DateLab {
     }
 
     public static List<String> installmentDates(LocalDate starDate, int periods) {
+        if (periods < 1) throw new IllegalArgumentException();
         List<String> list = new ArrayList<>();
-        for (int i = 1; i < periods; i++) {
+        for (int i = 0; i < periods; i++) {
             LocalDate newDate = starDate.plus(Period.ofMonths(i));
             String formaeDate = newDate.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
             list.add(formaeDate);
