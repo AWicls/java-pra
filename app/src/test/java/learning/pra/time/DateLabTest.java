@@ -68,8 +68,30 @@ class DateLabTest {
 
     @Test
     void addBusinessDaysAdvancesByPeriod() {
-        LocalDate result = DateLab.addBusinessDay(LocalDate.of(2026, 8, 7), 10);
+        LocalDate result = DateLab.addBusinessDays(LocalDate.of(2026, 8, 7), 10);
 
         assertEquals(LocalDate.of(2026, 8, 17), result);
     }
-}
+    @Test
+    void formatCustomProducesLocalizedPattern() {
+        String result = DateLab.formatCustom(LocalDateTime.of(2026, 8, 7, 19, 30));
+
+        assertEquals("2026年08月07日 19:30", result);
+    }
+
+    @Test
+    void parseCustomReadsLocalizedPattern() {
+        LocalDateTime result = DateLab.parseCustom("2026年08月07日 19:30");
+
+        assertEquals(LocalDateTime.of(2026, 8, 7, 19, 30), result);
+    }
+
+    @Test
+    void formatAndParseAreRoundTrip() {
+        LocalDateTime original = LocalDateTime.of(2026, 12, 31, 23, 59);
+
+        String formatted = DateLab.formatCustom(original);
+        LocalDateTime parsed = DateLab.parseCustom(formatted);
+
+        assertEquals(original, parsed);
+    }}

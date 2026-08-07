@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class DateLab {
 
@@ -34,6 +35,14 @@ public class DateLab {
 
     public static LocalDate addBusinessDays(LocalDate start, int days) {
         return start.plus(Period.ofDays(days));
+    }
+
+    public static String formatCustom(LocalDateTime dateTime) {
+        return dateTime.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm"));
+    }
+
+    public static LocalDateTime parseCustom(String text) {
+        return LocalDateTime.parse(text, DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm"));
     }
 
 }
