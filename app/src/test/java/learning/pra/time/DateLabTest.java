@@ -4,8 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 
 class DateLabTest {
@@ -55,5 +57,19 @@ class DateLabTest {
                 "伦敦段应含 +01:00 夏令时偏移: " + result);
         // 三段用 " / " 分隔
         assertTrue(result.contains(" / "), "段间应以 ' / ' 分隔: " + result);
+    }
+
+    @Test
+    void workDurationComputesMinutesBetween() {
+        Duration result = DateLab.workDuration(LocalTime.of(9, 0), LocalTime.of(17, 30));
+
+        assertEquals(510, result.toMinutes());
+    }
+
+    @Test
+    void addBusinessDaysAdvancesByPeriod() {
+        LocalDate result = DateLab.addBusinessDay(LocalDate.of(2026, 8, 7), 10);
+
+        assertEquals(LocalDate.of(2026, 8, 17), result);
     }
 }
