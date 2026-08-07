@@ -2,12 +2,14 @@ package learning.pra.time;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class DateLabTest {
@@ -94,4 +96,32 @@ class DateLabTest {
         LocalDateTime parsed = DateLab.parseCustom(formatted);
 
         assertEquals(original, parsed);
-    }}
+    }
+
+    @Test
+    void installmentDatesReturnsFormattedPeriods() {
+        List<String> result = DateLab.installmentDates(LocalDate.of(2026, 1, 15), 3);
+
+        assertEquals(List.of("2026年01月15日", "2026年02月15日", "2026年03月15日"), result);
+    }
+
+    @Test
+    void installmentDatesHandlesYearRollover() {
+        List<String> result = DateLab.installmentDates(LocalDate.of(2026, 12, 15), 2);
+
+        assertEquals(List.of("2026年12月15日", "2027年01月15日"), result);
+    }
+
+    @Test
+    void installmentDatesShrinksMonthEndToLastDay() {
+        List<String> result = DateLab.installmentDates(LocalDate.of(2026, 1, 31), 2);
+
+        assertEquals(List.of("2026年01月31日", "2026年02月28日"), result);
+    }
+
+    @Test
+    void installmentDatesRejectsZeroPeriods() {
+        assertThrows(IllegalArgumentException.class,
+                () -> DateLab.installmentDates(LocalDate.of(2026, 1, 15), 0));
+    }
+}

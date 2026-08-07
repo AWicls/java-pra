@@ -8,6 +8,8 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DateLab {
 
@@ -43,6 +45,16 @@ public class DateLab {
 
     public static LocalDateTime parseCustom(String text) {
         return LocalDateTime.parse(text, DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm"));
+    }
+
+    public static List<String> installmentDates(LocalDate starDate, int periods) {
+        List<String> list = new ArrayList<>();
+        for (int i = 1; i < periods; i++) {
+            LocalDate newDate = starDate.plus(Period.ofMonths(i));
+            String formaeDate = newDate.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
+            list.add(formaeDate);
+        }
+        return list;
     }
 
 }
