@@ -89,14 +89,14 @@ class OptionalLabTest {
 
     @Test
     void safeGetCityFullPath() {
-        OptionalLab.Address addr = new OptionalLab().new Address("Shanghai");
-        OptionalLab.User user = new OptionalLab().new User(addr);
+        OptionalLab.Address addr = new OptionalLab.Address("Shanghai");
+        OptionalLab.User user = new OptionalLab.User(addr);
         assertEquals("Shanghai", OptionalLab.safeGetCity(user));
     }
 
     @Test
     void safeGetCityNullAddress() {
-        OptionalLab.User user = new OptionalLab().new User(null);
+        OptionalLab.User user = new OptionalLab.User(null);
         assertEquals("unknown", OptionalLab.safeGetCity(user));
     }
 
