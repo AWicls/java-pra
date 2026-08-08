@@ -86,4 +86,22 @@ class OptionalLabTest {
     void filterLongWhenEmpty() {
         assertEquals(Optional.empty(), OptionalLab.filterLong(Optional.empty()));
     }
+
+    @Test
+    void safeGetCityFullPath() {
+        OptionalLab.Address addr = new OptionalLab().new Address("Shanghai");
+        OptionalLab.User user = new OptionalLab().new User(addr);
+        assertEquals("Shanghai", OptionalLab.safeGetCity(user));
+    }
+
+    @Test
+    void safeGetCityNullAddress() {
+        OptionalLab.User user = new OptionalLab().new User(null);
+        assertEquals("unknown", OptionalLab.safeGetCity(user));
+    }
+
+    @Test
+    void safeGetCityNullUser() {
+        assertEquals("unknown", OptionalLab.safeGetCity(null));
+    }
 }
