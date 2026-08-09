@@ -89,4 +89,41 @@ class GenericPecsLabTest {
         sb.append("hello");
         assertEquals("hello", sb.toString());   // 无需强转，编译期就是 StringBuilder
     }
+
+    // ========== bestName：多上界 <T extends Comparable<T> & Named> ==========
+
+    // Person 同时满足 Comparable<Person>（按 score 比）+ Named（报名字）
+    static class Person implements Comparable<Person>, GenericPecsLab.Named {
+        final String name;
+        final int score;
+        Person(String name, int score) { this.name = name; this.score = score; }
+        @Override public int compareTo(Person o) { return Integer.compare(this.score, o.score); }
+        @Override public String getName() { return name; }
+    }
+
+    @Test
+    @DisplayName("bestName_返回分数最高者的名字")
+    void bestName_分数最高() {
+        List<Person> persons = new ArrayList<>(List.of(
+                new Person("alice", 80),
+                new Person("bob", 95),
+                new Person("carol", 70)));
+        assertEquals("bob", GenericPecsLab.bestName(persons));
+    }
+
+    @Test
+    @DisplayName("bestName_平局时返回第一个")
+    void bestName_平局返回首个() {
+        List<Person> persons = new ArrayList<>(List.of(
+                new Person("first", 90),
+                new Person("second", 90)));
+        assertEquals("first", GenericPecsLab.bestName(persons));   // 只取 > 不取 >=
+    }
+
+    @Test
+    @DisplayName("bestName_空列表抛IllegalArgumentException")
+    void bestName_空列表抛异常() {
+        List<Person> empty = new ArrayList<>();
+        assertThrows(IllegalArgumentException.class, () -> GenericPecsLab.bestName(empty));
+    }
 }
