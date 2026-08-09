@@ -3,7 +3,9 @@ package learning.pra.generics;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GenericPecsLab {
 
@@ -39,4 +41,43 @@ public class GenericPecsLab {
         return max.getName();
     }
 
+}
+
+class Box<T> {
+    private T src = null;
+
+    public void set(T src) {
+        this.src = src;
+    }
+
+    public T get() {
+        return src;
+    }
+}
+
+class Repository<T> {
+
+    private Map<Integer, T> map = new HashMap<>();
+    private int keyId = 0;
+
+    public int add(T src) {
+        ++keyId;
+        map.put(keyId, src);
+        return keyId;
+    }
+
+    public T findById(int id) {
+        return map.get(id);
+    }
+
+    public boolean remove(int id) {
+        if (map.containsKey(id)) {
+            return map.remove(id, map.get(id));
+        }
+        return false;
+    }
+
+    public int count() {
+        return map.size();
+    }
 }

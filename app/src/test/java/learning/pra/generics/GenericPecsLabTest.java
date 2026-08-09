@@ -126,4 +126,63 @@ class GenericPecsLabTest {
         List<Person> empty = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> GenericPecsLab.bestName(empty));
     }
+
+    // ========== Box<T>：泛型包装盒 ==========
+
+    @Test
+    @DisplayName("Box_不同泛型类型复用同一类")
+    void box_不同类型() {
+        Box<Integer> intBox = new Box<>();
+        intBox.set(42);
+        assertEquals(42, intBox.get());
+
+        Box<String> strBox = new Box<>();
+        strBox.set("hi");
+        assertEquals("hi", strBox.get());
+    }
+
+    @Test
+    @DisplayName("Box_未设值时get返回null")
+    void box_未设值() {
+        Box<Integer> box = new Box<>();
+        assertNull(box.get());
+    }
+
+    // ========== Repository<T>：泛型 DAO ==========
+
+    @Test
+    @DisplayName("Repository_add返回自增id且findById能取回对应值")
+    void repo_addAndFind() {
+        Repository<String> repo = new Repository<>();
+        int id1 = repo.add("a");
+        int id2 = repo.add("b");
+        int id3 = repo.add("c");
+        assertEquals(1, id1);                 // 第一个 id 是 1
+        assertEquals(2, id2);
+        assertEquals(3, id3);
+        assertEquals("a", repo.findById(id1));  // 用返回的 id 能取回对应值
+        assertEquals("b", repo.findById(id2));
+        assertEquals("c", repo.findById(id3));
+    }
+
+    @Test
+    @DisplayName("Repository_支持不同类型（Person 也能存）")
+    void repo_不同类型() {
+        Repository<Person> repo = new Repository<>();
+        int id = repo.add(new Person("alice", 80));
+        assertEquals("alice", repo.findById(id).name);
+    }
+
+    @Test
+    @DisplayName("Repository_remove与count随增删变化")
+    void repo_removeAndCount() {
+        Repository<String> repo = new Repository<>();
+        int id = repo.add("x");
+        assertEquals(1, repo.count());
+
+        assertTrue(repo.remove(id));          // 删除存在返回 true
+        assertEquals(0, repo.count());
+
+        assertFalse(repo.remove(id));         // 删除不存在返回 false
+    }
 }
