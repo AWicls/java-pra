@@ -54,4 +54,39 @@ class GenericPecsLabTest {
         GenericPecsLab.copyAll(from, to);
         assertIterableEquals(List.of(1, 2, 7, 8), to);
     }
+
+    // ========== newArray：类型擦除 workaround（运行期造泛型数组）==========
+
+    @Test
+    @DisplayName("newArray_返回真正的String[]而非Object[]")
+    void newArray_String数组() {
+        String[] arr = GenericPecsLab.newArray(String.class, 3);
+        assertEquals(String.class, arr.getClass().getComponentType());   // 元素类型是 String
+        assertEquals(3, arr.length);
+    }
+
+    @Test
+    @DisplayName("newArray_Integer数组长度正确")
+    void newArray_Integer数组() {
+        Integer[] arr = GenericPecsLab.newArray(Integer.class, 5);
+        assertEquals(Integer.class, arr.getClass().getComponentType());
+        assertEquals(5, arr.length);
+    }
+
+    // ========== createInstance：反射在运行期造对象 ==========
+
+    @Test
+    @DisplayName("createInstance_返回指定类型的实例")
+    void createInstance_StringBuilder() throws Exception {
+        Object sb = GenericPecsLab.createInstance(StringBuilder.class);
+        assertInstanceOf(StringBuilder.class, sb);
+    }
+
+    @Test
+    @DisplayName("createInstance_能作为T直接用（泛型强类型）")
+    void createInstance_泛型强类型() throws Exception {
+        StringBuilder sb = GenericPecsLab.createInstance(StringBuilder.class);
+        sb.append("hello");
+        assertEquals("hello", sb.toString());   // 无需强转，编译期就是 StringBuilder
+    }
 }

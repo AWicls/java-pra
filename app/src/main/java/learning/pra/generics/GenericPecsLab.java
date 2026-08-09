@@ -1,5 +1,7 @@
 package learning.pra.generics;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class GenericPecsLab {
@@ -8,6 +10,14 @@ public class GenericPecsLab {
         for (T object : src) {
             dst.addLast(object);
         }
+    }
+
+    public static <T> T[] newArray(Class<T> componentType, int length) {
+        return (T[])Array.newInstance(componentType, length);
+    }
+
+    public static <T> T createInstance(Class<T> type) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+        return type.getDeclaredConstructor().newInstance();
     }
 
 }
