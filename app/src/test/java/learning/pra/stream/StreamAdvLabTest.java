@@ -88,4 +88,50 @@ class StreamAdvLabTest {
     void distinctTags_emptyList_returnsEmpty() {
         assertTrue(StreamAdvLab.distinctTags(List.of()).isEmpty());
     }
+
+    @Test
+    void joinProducts_joinsDistinctWithComma() {
+        assertEquals("手机, 耳机, 平板",
+                StreamAdvLab.joinProducts(salesWithDup()));
+    }
+
+    @Test
+    void joinProducts_emptyList_returnsEmptyString() {
+        assertEquals("", StreamAdvLab.joinProducts(List.of()));
+    }
+
+    @Test
+    void productsByRegion_groupsProductNames() {
+        Map<String, List<String>> result =
+                StreamAdvLab.productsByRegion(salesWithDup());
+        assertEquals(List.of("手机", "耳机"), result.get("华东"));
+        assertEquals(List.of("平板", "手机"), result.get("华南"));
+    }
+
+    @Test
+    void productsByRegion_emptyList_returnsEmptyMap() {
+        assertTrue(StreamAdvLab.productsByRegion(List.of()).isEmpty());
+    }
+
+    @Test
+    void totalAmountBuRegion_sumsPerRegionAsInteger() {
+        Map<String, Integer> result =
+                StreamAdvLab.totalAmountBuRegion(salesWithDup());
+        assertEquals(1000, result.get("华东"));   // 700+300
+        assertEquals(1500, result.get("华南"));   // 500+1000
+        assertEquals(Integer.class, result.get("华东").getClass());
+    }
+
+    @Test
+    void totalAmountBuRegion_emptyList_returnsEmptyMap() {
+        assertTrue(StreamAdvLab.totalAmountBuRegion(List.of()).isEmpty());
+    }
+
+    private List<Sale> salesWithDup() {
+        return List.of(
+                new Sale("华东", "手机", 700),
+                new Sale("华东", "耳机", 300),
+                new Sale("华南", "平板", 500),
+                new Sale("华南", "手机", 1000));
+    }
 }

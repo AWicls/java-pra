@@ -2,6 +2,7 @@ package learning.pra.stream;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class StreamAdvLab {
@@ -27,11 +28,32 @@ public class StreamAdvLab {
     }
 
     public static List<String> distinctTags(List<TaggedBox> boxes) {
-        return boxes.stream().flatMap(t ->t.tags().stream()).distinct().toList();
+        return boxes.stream().flatMap(t -> t.tags().stream()).distinct().toList();
+    }
+
+    public static String joinProducts(List<Sale> sales) {
+        return sales.stream()
+                .map(Sale::product).distinct().collect(Collectors.joining(", "));
+    }
+
+    public static Map<String, List<String>> productsByRegion(List<Sale> sales) {
+        return sales.stream()
+                .collect(
+                        Collectors.groupingBy(Sale::region,
+                                Collectors.mapping(Sale::product,
+                                        Collectors.toList())));
+    }
+
+    public static Map<String, Integer> totalAmountBuRegion(List<Sale> sales) {
+        return sales.stream()
+        .collect(Collectors.groupingBy(Sale::region,
+            Collectors.collectingAndThen(Collectors.summingInt(Sale::amount), Integer::intValue)));
     }
 
 }
 
-record Sale(String region, String product, int amount) {};
+record Sale(String region, String product, int amount) {
+};
 
-record TaggedBox(String region, List<String> tags){};
+record TaggedBox(String region, List<String> tags) {
+};
