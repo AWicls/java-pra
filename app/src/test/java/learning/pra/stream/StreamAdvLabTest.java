@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 
@@ -133,5 +134,51 @@ class StreamAdvLabTest {
                 new Sale("华东", "耳机", 300),
                 new Sale("华南", "平板", 500),
                 new Sale("华南", "手机", 1000));
+    }
+
+    @Test
+    void parallelAndSerialSum_agreeOnLargeList() {
+        List<Integer> big = IntStream.rangeClosed(1, 10000).boxed().toList();
+        int expected = 10000 * (10000 + 1) / 2;   // 1..10000 求和公式
+        assertEquals(expected, StreamAdvLab.parallelSum(big));
+        assertEquals(expected, StreamAdvLab.serialSum(big));
+    }
+
+    @Test
+    void parallelSum_emptyList_returnsZero() {
+        assertEquals(0, StreamAdvLab.parallelSum(List.of()));
+        assertEquals(0, StreamAdvLab.serialSum(List.of()));
+    }
+
+    @Test
+    void parallelSortedDesc_returnsStableDescending() {
+        List<Integer> input = List.of(3, 1, 4, 1, 5, 9, 2, 6);
+        assertEquals(List.of(9, 6, 5, 4, 3, 2, 1, 1),
+                StreamAdvLab.parallelSortedDesc(input));
+    }
+
+    @Test
+    void parallelSortedDesc_emptyList_returnsEmpty() {
+        assertTrue(StreamAdvLab.parallelSortedDesc(List.of()).isEmpty());
+    }
+
+    @Test
+    void averageCollector_averagesIntegers() {
+        List<Integer> nums = List.of(2, 4, 6, 8);
+        double avg = nums.stream().collect(StreamAdvLab.averageCollector());
+        assertEquals(5.0, avg, 0.001);
+    }
+
+    @Test
+    void averageCollector_emptyStream_returnsZero() {
+        double avg = List.<Integer>of().stream().collect(StreamAdvLab.averageCollector());
+        assertEquals(0.0, avg, 0.001);
+    }
+
+    @Test
+    void averageCollector_nonIntegralAverage() {
+        List<Integer> nums = List.of(1, 2);
+        double avg = nums.stream().collect(StreamAdvLab.averageCollector());
+        assertEquals(1.5, avg, 0.001);
     }
 }

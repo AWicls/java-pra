@@ -1,5 +1,6 @@
 package learning.pra.stream;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collector;
@@ -46,8 +47,42 @@ public class StreamAdvLab {
 
     public static Map<String, Integer> totalAmountBuRegion(List<Sale> sales) {
         return sales.stream()
-        .collect(Collectors.groupingBy(Sale::region,
-            Collectors.collectingAndThen(Collectors.summingInt(Sale::amount), Integer::intValue)));
+                .collect(Collectors.groupingBy(Sale::region,
+                        Collectors.collectingAndThen(Collectors.summingInt(Sale::amount),
+                                Integer::intValue)));
+    }
+
+    public static int parallelSum(List<Integer> nums) {
+        return nums.parallelStream()
+                .reduce(0, Integer::sum);
+    }
+
+    public static int serialSum(List<Integer> nums) {
+        return nums.stream()
+                .reduce(0, Integer::sum);
+    }
+
+    public static List<Integer> parallelSortedDesc(List<Integer> nums) {
+        return nums.parallelStream()
+                .sorted(Comparator.reverseOrder())
+                .toList();
+    }
+
+    public static Collector<Integer, ?, Double> averageCollector() {
+        return Collector.of(() -> new int[] { 0, 0 },
+                (int[] acc, Integer t) -> {
+                    acc[0]++;
+                    acc[1] += t;
+                }, (a, b) -> {
+                    a[0] += b[0];
+                    a[1] += b[1];
+                    return a;
+                }, (acc) -> {
+                    if (acc[0] == 0) {
+                        return 0.0;
+                    }
+                    return (double) acc[1] / acc[0];
+                });
     }
 
 }
