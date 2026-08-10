@@ -60,4 +60,32 @@ class StreamAdvLabTest {
         assertEquals(1, result.get(true).size());   // 1000 == 1000 应算达标
         assertEquals(1, result.get(false).size());  // 999 未达标
     }
+
+    @Test
+    void flattenTags_mergesAllBoxTags() {
+        List<TaggedBox> boxes = List.of(
+                new TaggedBox("华东", List.of("手机", "耳机")),
+                new TaggedBox("华南", List.of("平板", "手机")));
+        assertEquals(List.of("手机", "耳机", "平板", "手机"),
+                StreamAdvLab.flattenTags(boxes));
+    }
+
+    @Test
+    void flattenTags_emptyList_returnsEmpty() {
+        assertTrue(StreamAdvLab.flattenTags(List.of()).isEmpty());
+    }
+
+    @Test
+    void distinctTags_removesDuplicatesAcrossBoxes() {
+        List<TaggedBox> boxes = List.of(
+                new TaggedBox("华东", List.of("手机", "耳机")),
+                new TaggedBox("华南", List.of("平板", "手机")));
+        assertEquals(List.of("手机", "耳机", "平板"),
+                StreamAdvLab.distinctTags(boxes));
+    }
+
+    @Test
+    void distinctTags_emptyList_returnsEmpty() {
+        assertTrue(StreamAdvLab.distinctTags(List.of()).isEmpty());
+    }
 }

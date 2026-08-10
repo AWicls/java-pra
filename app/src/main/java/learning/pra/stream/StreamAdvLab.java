@@ -22,7 +22,16 @@ public class StreamAdvLab {
                 .collect(Collectors.groupingBy(p -> p.amount() >= threshold));
     }
 
+    public static List<String> flattenTags(List<TaggedBox> boxes) {
+        return boxes.stream().flatMap(t -> t.tags().stream()).toList();
+    }
+
+    public static List<String> distinctTags(List<TaggedBox> boxes) {
+        return boxes.stream().flatMap(t ->t.tags().stream()).distinct().toList();
+    }
+
 }
 
-record Sale(String region, String product, int amount) {
-};
+record Sale(String region, String product, int amount) {};
+
+record TaggedBox(String region, List<String> tags){};
