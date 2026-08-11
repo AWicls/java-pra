@@ -3,6 +3,7 @@ package learning.pra.nio;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -41,6 +42,41 @@ public class NioLab {
             return 0;
         }).sum();
         return "total=" + count + " txt=" + count2 + " bytes=" + count3;
+    }
+
+    public static int bufferFlipDemo() {
+        ByteBuffer buffer = ByteBuffer.allocate(16);
+        buffer.put((byte) 10);
+        buffer.put((byte) 20);
+        buffer.put((byte) 30);
+        buffer.flip();
+        int sum = 0;
+        while (buffer.hasRemaining()) {
+            sum += buffer.get();
+        }
+        return sum;
+    }
+
+    public static String writeLines(String file, List<String> lines) {
+        Path path = Path.of(file);
+        try {
+            if (path.getParent() != null) {
+                Files.createDirectories(path.getParent());
+            }
+            String content = String.join(System.lineSeparator(), lines);
+            Path writeString = Files.writeString(path, content);
+            return Files.readString(writeString);
+        } catch (IOException e) {
+            System.err.println(e);
+            return null;
+        }
+    }
+
+    public static boolean filesIdentical(String a, String b) throws IOException {
+        Path pa = Path.of(a);
+        Path pb = Path.of(b);
+        long mismatch = Files.mismatch(pa, pb);
+        return mismatch == -1 ? true : false;
     }
 
 }
