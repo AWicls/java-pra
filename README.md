@@ -21,39 +21,58 @@ app/src/main/java/learning/pra/
 ├── App.java                  # 入口（Gradle init 模板）
 ├── collections/              # 集合地基：List / Set / Map / 不可变集合
 │   └── ListLab.java
-├── generics/                 # 泛型地基：类型参数 / 边界 / PECS / 类型擦除
-│   └── GenericsLab.java
-├── stream/                   # 函数式 / Stream：filter/map/collect/groupingBy/Optional
-│   └── StreamLab.java
+├── generics/                 # 泛型：类型参数 / 边界 / PECS / 擦除 / 泛型进阶实战
+│   ├── GenericsLab.java
+│   └── GenericPecsLab.java
+├── stream/                   # Stream：filter/map/collect/groupingBy / 进阶收集器
+│   ├── StreamLab.java
+│   └── StreamAdvLab.java
 ├── modern/                   # 现代特性：Records / Sealed / Pattern Matching switch
-│   └── ModernLab.java
-├── concurrent/               # 并发：Thread / synchronized / Atomic / volatile / BlockingQueue / 虚拟线程 / CompletableFuture
+│   ├── ModernLab.java
+│   └── VehicleLab.java       # 第十六课：Sealed 三层层级（进行中）
+├── concurrent/               # 并发：Thread / synchronized / Atomic / CompletableFuture
 │   └── ConcurrencyLab.java
-├── exceptions/               # 异常体系：受检/非受检 / try-with-resources / 异常链 / 自定义异常
+├── exceptions/               # 异常体系：受检/非受检 / try-with-resources / 异常链
 │   ├── ExceptionLab.java
 │   └── ConfigException.java
-├── io/                       # IO 流：字符流 / 字节流 / 装饰器 / Scanner·PrintWriter / NIO.2
+├── io/                       # IO：字符/字节流 / 装饰器 / Scanner·PrintWriter
 │   └── IoLab.java
+├── nio/                      # NIO 块式 IO：Path / Files / ByteBuffer
+│   └── NioLab.java
 ├── reflection/               # 反射：Class / Field / Method / Constructor 三剑客
 │   └── ReflectionLab.java
-└── annotations/              # 注解：内置 / 元注解 / 自定义 / 注解+反射实战
-    ├── AnnotationsLab.java
-    └── ValidatorLab.java
+├── annotations/              # 注解：内置 / 元注解 / 自定义 / 反射实战
+│   ├── AnnotationsLab.java
+│   └── ValidatorLab.java
+├── enums/                    # 枚举：本质 / EnumSet·EnumMap / 策略模式实战
+│   └── EnumLab.java
+├── time/                     # java.time：LocalDate / ZonedDateTime / 格式化
+│   └── DateLab.java
+└── optional/                 # Optional 深入：map/flatMap/orElse 链式取值
+    └── OptionalLab.java
 
 app/src/test/java/learning/pra/   # 测试与源码同包（各包同构）
 ├── collections/ListLabTest.java
+├── generics/GenericsLabTest.java
+├── generics/GenericPecsLabTest.java
+├── stream/StreamLabTest.java
+├── stream/StreamAdvLabTest.java
+├── modern/ModernLabTest.java
 ├── concurrent/ConcurrencyLabTest.java
 ├── exceptions/ExceptionLabTest.java
 ├── io/IoLabTest.java
+├── nio/NioLabTest.java
 ├── reflection/ReflectionLabTest.java
-└── annotations/
-    ├── AnnotationsLabTest.java
-    ├── AnnotationsLabLabelTest.java
-    └── ValidatorLabTest.java
+├── annotations/AnnotationsLabTest.java
+├── annotations/AnnotationsLabLabelTest.java
+├── annotations/ValidatorLabTest.java
+├── enums/EnumLabTest.java
+├── time/DateLabTest.java
+└── optional/OptionalLabTest.java
 
 docs/                         # 每日学习笔记（知识点 + 真实坑 + 待补强项）
 ├── 00-learning-roadmap.md   # 全程学习路线总览
-├── day1-learning-notes.md ~ day6-learning-notes.md
+├── day1-learning-notes.md ~ day13-learning-notes.md
 gradle/libs.versions.toml     # 依赖版本集中管理
 ```
 
