@@ -78,7 +78,7 @@ gradle/libs.versions.toml     # 依赖版本集中管理
 
 ## 学习路线
 
-完整路线见 [docs/00-learning-roadmap.md](docs/00-learning-roadmap.md)。当前进度：第 9 课已完成，下一课为第 10 课「枚举」。
+完整路线见 [docs/00-learning-roadmap.md](docs/00-learning-roadmap.md)。当前进度：已完成 15 课（Day1-12），进行中为第十六课「现代特性速览」（Records ✅ / Sealed 深入）。
 
 ```mermaid
 graph LR
@@ -126,7 +126,7 @@ graph LR
 
 ## 进度
 
-### 已完成（9 课）
+### 已完成（15 课）
 
 - [x] 第一课：集合框架（[ListLab](app/src/main/java/learning/pra/collections/ListLab.java)）- 去重 / 反转 / 频率 / max / 不可变集合
 - [x] 第二课：泛型（[GenericsLab](app/src/main/java/learning/pra/generics/GenericsLab.java)）- 类型参数 / 上界 / PECS / 类型擦除 / Stack 泛型类
@@ -137,16 +137,16 @@ graph LR
 - [x] 第七课：IO 流（[IoLab](app/src/main/java/learning/pra/io/IoLab.java)）- 字节/字符流 / 装饰器 / Scanner·PrintWriter，15 测试
 - [x] 第八课：反射（[ReflectionLab](app/src/main/java/learning/pra/reflection/ReflectionLab.java)）- Class / Field / Method / Constructor 三剑客，24 测试
 - [x] 第九课：注解（[AnnotationsLab](app/src/main/java/learning/pra/annotations/AnnotationsLab.java) / [ValidatorLab](app/src/main/java/learning/pra/annotations/ValidatorLab.java)）- 内置注解 / 元注解 / 自定义注解 / 表单校验器实战，20 测试
+- [x] 第十课：枚举（[EnumLab](app/src/main/java/learning/pra/enums/EnumLab.java)）- 本质 / 字段构造器 / EnumSet·EnumMap / 策略模式实战，56 测试
+- [x] 第十一课：`java.time`（[DateLab](app/src/main/java/learning/pra/time/DateLab.java)）- LocalDate / ZonedDateTime / Duration·Period / DateTimeFormatter
+- [x] 第十二课：`Optional` 深入（[OptionalLab](app/src/main/java/learning/pra/optional/OptionalLab.java)）- map / flatMap / orElse / 嵌套安全取值
+- [x] 第十三课：泛型进阶实战（[GenericPecsLab](app/src/main/java/learning/pra/generics/GenericPecsLab.java)）- PECS / 类型擦除 workaround / 泛型数组
+- [x] 第十四课：Stream 进阶（[StreamAdvLab](app/src/main/java/learning/pra/stream/StreamAdvLab.java)）- groupingBy / partitioningBy / 自定义 Collector
+- [x] 第十五课：NIO（[NioLab](app/src/main/java/learning/pra/nio/NioLab.java)）- Path / Files / ByteBuffer / 便捷读写，8 测试
 
-### 下一阶段（10-18 课，详见 [学习路线](docs/00-learning-roadmap.md)）
+### 进行中 / 未完成（详见 [学习路线](docs/00-learning-roadmap.md)）
 
-- [ ] 第十课：枚举（enum）
-- [ ] 第十一课：`java.time` 日期时间
-- [ ] 第十二课：`Optional` 深入
-- [ ] 第十三课：泛型进阶实战（PECS 实战 / 类型擦除 / 泛型数组）
-- [ ] 第十四课：Stream 进阶（groupingBy / flatMap / 自定义 Collector）
-- [ ] 第十五课：NIO 与现代 IO
-- [ ] 第十六课：现代特性速览（Records / Sealed / Pattern Matching）
+- [~] 第十六课：现代特性速览（Records ✅ / Sealed 进行中 / Pattern Matching / Switch Pattern / Text Blocks）
 - [ ] 第十七课：并发进阶（ReentrantLock / CompletableFuture / Virtual Threads）
 - [ ] 第十八课：综合实战 -- 微型 IoC 框架
 
@@ -163,6 +163,13 @@ graph LR
 | [day4](docs/day4-learning-notes.md) | 08-03 | IO 流体系 |
 | [day5](docs/day5-learning-notes.md) | 08-04 | 反射 |
 | [day6](docs/day6-learning-notes.md) | 08-05 | 注解（含表单校验器实战）|
+| [day7](docs/day7-learning-notes.md) | 08-06 | 枚举（含策略模式实战）|
+| [day8](docs/day8-learning-notes.md) | 08-07 | `java.time` 日期时间 |
+| [day9](docs/day9-learning-notes.md) | 08-08 | `Optional` 深入 |
+| [day10](docs/day10-learning-notes.md) | 08-09 | 泛型进阶实战 |
+| [day11](docs/day11-learning-notes.md) | 08-10 | Stream 进阶 |
+| [day12](docs/day12-learning-notes.md) | 08-11 | NIO 与现代 IO |
+| [day13](docs/day13-learning-notes.md) | 08-12 | 现代特性速览（Records / Sealed）|
 
 ## 备注
 
