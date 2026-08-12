@@ -1,7 +1,7 @@
 # Java 学习笔记 - Day 13（2026-08-12）
 
 > 学习项目：java-pra（JDK 25 + Gradle 9.6.1 + JUnit Jupiter 6.0.1）
-> 进度：第十六课（现代特性速览 JDK 16-25）-- 概念点 1 Records（总结）
+> 进度：第十六课（现代特性速览 JDK 16-25）-- 概念点1 Records ✅ + 概念点2 Sealed ✅（VehicleLab 实战）
 > 说明：Day1 ModernLab 已接触 record/sealed/switch 基础，本课系统化 + 深入
 
 ---
@@ -63,8 +63,63 @@ record Age(int value) {
 #### 一句话记忆
 record = "字段全 final + 自动样板方法的不可变载体"，构造时想校验/规范化就用**紧凑构造器**，想重写赋值才用**规范构造器**。
 
+### 概念点 2：Sealed Classes 深入（VehicleLab 实战）
+
+**生活例子**：`sealed` 像封闭的家庭登记簿——家长列出允许继承的子女名单（`permits`），名单外的人不能自称是这个家族后代。
+
+#### 子类必须"三选一"修饰符
+
+`permits` 列出的每个直接子类，声明时**必须**选一种：
+
+| 修饰符 | 含义 | 后代 |
+|--------|------|------|
+| `final` | 封闭到底 | 不能再被继承 |
+| `sealed` | 继续封闭 | 自己再列 `permits` |
+| `non-sealed` | 重新开放 | 任何人都能继承 |
+
+普通 `class` 直接 `implements` sealed 接口**编译错**，必须显式声明三选一。
+
+#### `permits` 位置约束
+- 未模块化：直接子类必须在**同一个包**
+- 模块化：子类可在同一模块，但需显式 `permits`（跨包无法省略）
+- 省略 `permits` 前提：子类与父类**同文件**，编译器自动推断
+
+#### 穷尽性（exhaustiveness）
+编译器知道 sealed 全部子类 → switch 覆盖全部分支后**可不写 `default`**，漏分支直接编译错。
+
+#### 实战：`VehicleLab`（三层层级）
+```java
+sealed interface VehicleLab permits Car, Truck, Bike {   // ① 接口密封
+    static String describe(VehicleLab v) {
+        return switch (v) {
+            case Car c -> "汽车: " + c.brand();
+            case Pickup p -> "皮卡: " + p.loadKg();   // 子类型分支放前面
+            case Truck t -> "卡车";
+            case Bike b -> "单车: " + b.gears();
+            // 不加 default：sealed 保证穷尽
+        };
+    }
+}
+final record Car(String brand) implements VehicleLab {}     // ② final + record
+sealed class Truck implements VehicleLab permits Pickup {}  // ③ sealed 继续封闭
+final class Pickup extends Truck { /* final，字段 loadKg */ } // ④ final 普通 class
+non-sealed class Bike implements VehicleLab { /* non-sealed 开放 */ } // ⑤
+```
+
+#### 踩坑（重要）：穷尽性按 `permits` 直接子类型算
+第一版 `describe` 只写 `Car / Pickup / Bike` 三分支，编译报 **"switch 表达式不包含所有可能的输入值"**：
+- sealed 穷尽性要求覆盖 `permits` 列出的**直接子类型**（`Car`/`Truck`/`Bike`）
+- `Pickup` 是 `Truck` 的**子类**，不能顶替 `Truck` 分支
+- 修正：补 `case Truck` 分支，且 `case Pickup`（子类型）放 `case Truck` **之前**先匹配
+
+> 类比：`permits` 是三兄弟（Car/Truck/Bike），Pickup 是 Truck 的儿子——switch 要覆盖三兄弟，不能只认孙子。
+
+#### 完成情况
+- `VehicleLabTest`：`describeCar` / `describePickup` / `describeBike` 3 测试全绿
+- 代码：[VehicleLab.java](app/src/main/java/learning/pra/modern/VehicleLab.java) / 测试：[VehicleLabTest.java](app/src/test/java/learning/pra/modern/VehicleLabTest.java)
+
 ---
 
-## 二、下一步
+## 三、下一步
 
-- 第十六课概念点 2：Sealed Classes 深入（`permits` 子类位置约束 / `non-sealed` / 穷尽性）
+- 第十六课概念点 3：Pattern Matching for instanceof 深入 → 概念点 4 Switch Pattern 深入 → 概念点 5 Text Blocks → 实战重构表达式树
