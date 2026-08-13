@@ -137,7 +137,7 @@
 - `Files.readAllLines` / `Files.writeString`（一行搞定）
 - **实战**：用 NIO 重写 IoLab（对比流式与块式）
 
-### 第十六课：现代特性速览（JDK 16-25）
+### 第十六课：现代特性速览（JDK 16-25）✅ 已完成（2026-08-13，概念点1-5 过完，实战用户自练）
 
 - Records（不可变数据载体，替代 POJO）
 - Sealed Classes（密封类，限定继承层级）

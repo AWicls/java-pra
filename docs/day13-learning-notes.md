@@ -3,6 +3,7 @@
 > 学习项目：java-pra（JDK 25 + Gradle 9.6.1 + JUnit Jupiter 6.0.1）
 > 进度：第十六课（现代特性速览 JDK 16-25）-- 概念点1 Records ✅ + 概念点2 Sealed ✅（VehicleLab 实战）
 > 说明：Day1 ModernLab 已接触 record/sealed/switch 基础，本课系统化 + 深入
+> 拆分：概念点3-5（2026-08-13，已跳过）见 [day14-learning-notes.md](day14-learning-notes.md)
 
 ---
 
@@ -118,8 +119,7 @@ non-sealed class Bike implements VehicleLab { /* non-sealed 开放 */ } // ⑤
 - `VehicleLabTest`：`describeCar` / `describePickup` / `describeBike` 3 测试全绿
 - 代码：[VehicleLab.java](app/src/main/java/learning/pra/modern/VehicleLab.java) / 测试：[VehicleLabTest.java](app/src/test/java/learning/pra/modern/VehicleLabTest.java)
 
----
-
 ## 三、下一步
 
-- 第十六课概念点 3：Pattern Matching for instanceof 深入 → 概念点 4 Switch Pattern 深入 → 概念点 5 Text Blocks → 实战重构表达式树
+- 第十六课概念点 1/2（2026-08-12）完成；概念点 3/4/5 于 2026-08-13 完成（用户熟悉已跳过），见 [day14-learning-notes.md](day14-learning-notes.md)
+- 接下来：第十七课 并发进阶（ReentrantLock / Condition / CompletableFuture / ExecutorService / Virtual Threads）
