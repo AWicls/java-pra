@@ -44,6 +44,13 @@ public class AsyncAggregateLab {
         CompletableFuture<String> productFuture = fetchProduct(productId);
         CompletableFuture<String> logisticsFuture = fetchLogistics(orderId);
 
+        // CompletableFuture.allOf(userFuture, productFuture, logisticsFuture).join();
+
+        // String result = userFuture.join() + " | " + productFuture.join() + " | " + logisticsFuture.join();
+        // long elapsed = System.currentTimeMillis() - start;
+        // return result + " (耗时" + elapsed + "ms)";
+
+
         CompletableFuture<String> userAndProduct = userFuture.thenCombine(productFuture, (a, b) -> a + "|" + b);
         CompletableFuture<String> full = userAndProduct.thenCombine(logisticsFuture, (a, b) -> a + "|" + b);
 
