@@ -29,9 +29,14 @@ app/src/main/java/learning/pra/
 │   └── StreamAdvLab.java
 ├── modern/                   # 现代特性：Records / Sealed / Pattern Matching switch
 │   ├── ModernLab.java
-│   └── VehicleLab.java       # 第十六课：Sealed 三层层级（进行中）
-├── concurrent/               # 并发：Thread / synchronized / Atomic / CompletableFuture
-│   └── ConcurrencyLab.java
+│   └── VehicleLab.java       # 第十六课：Sealed 三层层级
+├── concurrent/               # 并发：锁 / 条件 / 异步 / 线程池 / 虚拟线程
+│   ├── ConcurrencyLab.java      # 第五课：Thread / synchronized / wait·notify
+│   ├── ReentrantLockLab.java    # 第十七课：ReentrantLock 手动锁 + 超时
+│   ├── ConditionLab.java        # 第十七课：Condition 有界阻塞队列
+│   ├── AsyncAggregateLab.java   # 第十七课：CompletableFuture 并发聚合
+│   ├── ExecutorPoolLab.java     # 第十七课：线程池复用 + Future 取结果
+│   └── VirtualThreadLab.java    # 第十七课：虚拟线程万级任务
 ├── exceptions/               # 异常体系：受检/非受检 / try-with-resources / 异常链
 │   ├── ExceptionLab.java
 │   └── ConfigException.java
@@ -59,6 +64,11 @@ app/src/test/java/learning/pra/   # 测试与源码同包（各包同构）
 ├── stream/StreamAdvLabTest.java
 ├── modern/ModernLabTest.java
 ├── concurrent/ConcurrencyLabTest.java
+├── concurrent/ReentrantLockLabTest.java
+├── concurrent/ConditionLabTest.java
+├── concurrent/AsyncAggregateLabTest.java
+├── concurrent/ExecutorPoolLabTest.java
+├── concurrent/VirtualThreadLabTest.java
 ├── exceptions/ExceptionLabTest.java
 ├── io/IoLabTest.java
 ├── nio/NioLabTest.java
@@ -72,13 +82,13 @@ app/src/test/java/learning/pra/   # 测试与源码同包（各包同构）
 
 docs/                         # 每日学习笔记（知识点 + 真实坑 + 待补强项）
 ├── 00-learning-roadmap.md   # 全程学习路线总览
-├── day1-learning-notes.md ~ day13-learning-notes.md
+├── day1-learning-notes.md ~ day15-learning-notes.md
 gradle/libs.versions.toml     # 依赖版本集中管理
 ```
 
 ## 学习路线
 
-完整路线见 [docs/00-learning-roadmap.md](docs/00-learning-roadmap.md)。当前进度：已完成 15 课（Day1-12），进行中为第十六课「现代特性速览」（Records ✅ / Sealed 深入）。
+完整路线见 [docs/00-learning-roadmap.md](docs/00-learning-roadmap.md)。当前进度：已完成 17 课（Day1-15），第十六课「现代特性速览」与第十七课「并发进阶」已完结，进行中为第十八课「综合实战 IoC」。
 
 ```mermaid
 graph LR
@@ -143,11 +153,11 @@ graph LR
 - [x] 第十三课：泛型进阶实战（[GenericPecsLab](app/src/main/java/learning/pra/generics/GenericPecsLab.java)）- PECS / 类型擦除 workaround / 泛型数组
 - [x] 第十四课：Stream 进阶（[StreamAdvLab](app/src/main/java/learning/pra/stream/StreamAdvLab.java)）- groupingBy / partitioningBy / 自定义 Collector
 - [x] 第十五课：NIO（[NioLab](app/src/main/java/learning/pra/nio/NioLab.java)）- Path / Files / ByteBuffer / 便捷读写，8 测试
+- [x] 第十六课：现代特性速览（[VehicleLab](app/src/main/java/learning/pra/modern/VehicleLab.java)）- Records / Sealed / Pattern Matching / Switch Pattern / Text Blocks
+- [x] 第十七课：并发进阶（[ReentrantLockLab](app/src/main/java/learning/pra/concurrent/ReentrantLockLab.java) / [ConditionLab](app/src/main/java/learning/pra/concurrent/ConditionLab.java) / [AsyncAggregateLab](app/src/main/java/learning/pra/concurrent/AsyncAggregateLab.java) / [ExecutorPoolLab](app/src/main/java/learning/pra/concurrent/ExecutorPoolLab.java) / [VirtualThreadLab](app/src/main/java/learning/pra/concurrent/VirtualThreadLab.java)）- 锁 / 条件 / 异步聚合 / 线程池 / 虚拟线程，13 测试
 
 ### 进行中 / 未完成（详见 [学习路线](docs/00-learning-roadmap.md)）
 
-- [~] 第十六课：现代特性速览（Records ✅ / Sealed 进行中 / Pattern Matching / Switch Pattern / Text Blocks）
-- [ ] 第十七课：并发进阶（ReentrantLock / CompletableFuture / Virtual Threads）
 - [ ] 第十八课：综合实战 -- 微型 IoC 框架
 
 ## 学习笔记
@@ -170,6 +180,8 @@ graph LR
 | [day11](docs/day11-learning-notes.md) | 08-10 | Stream 进阶 |
 | [day12](docs/day12-learning-notes.md) | 08-11 | NIO 与现代 IO |
 | [day13](docs/day13-learning-notes.md) | 08-12 | 现代特性速览（Records / Sealed）|
+| [day14](docs/day14-learning-notes.md) | 08-13 | 现代特性速览（instanceof / Switch Pattern / Text Blocks）|
+| [day15](docs/day15-learning-notes.md) | 08-14 | 并发进阶详尽版（锁 / 条件 / 异步 / 线程池 / 虚拟线程）|
 
 ## 备注
 
