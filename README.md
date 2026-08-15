@@ -4,6 +4,7 @@
 >
 > 已有基础语法底子，重点进修进阶特性（集合 / 泛型 / 并发 / 现代特性等）。
 > 学一课、写一课、测一课、归档一课。
+> **状态：18 课全部完成 ✅（16 天 / 14 个主题包 / 300 测试全绿）**
 
 ## 技术栈
 
@@ -53,8 +54,15 @@ app/src/main/java/learning/pra/
 │   └── EnumLab.java
 ├── time/                     # java.time：LocalDate / ZonedDateTime / 格式化
 │   └── DateLab.java
-└── optional/                 # Optional 深入：map/flatMap/orElse 链式取值
-    └── OptionalLab.java
+├── optional/                 # Optional 深入：map/flatMap/orElse 链式取值
+│   └── OptionalLab.java
+└── ioc/                      # 第十八课：迷你 IoC 容器（注解 + 反射 + 泛型 + 设计模式）
+    ├── MiniContainer.java    # 容器：登记 / 懒加载 / 依赖注入 / 循环依赖检测
+    ├── Component.java        # @Component 注解
+    ├── Inject.java           # @Inject 注解
+    ├── Singleton.java        # @Singleton 注解
+    ├── OrderService.java     # 依赖方 Bean（@Component @Singleton）
+    └── OrderRepository.java  # 被依赖方 Bean（@Component）
 
 app/src/test/java/learning/pra/   # 测试与源码同包（各包同构）
 ├── collections/ListLabTest.java
@@ -78,17 +86,21 @@ app/src/test/java/learning/pra/   # 测试与源码同包（各包同构）
 ├── annotations/ValidatorLabTest.java
 ├── enums/EnumLabTest.java
 ├── time/DateLabTest.java
-└── optional/OptionalLabTest.java
+├── optional/OptionalLabTest.java
+├── ioc/AnnotationLabTest.java
+└── ioc/MiniContainerTest.java
 
-docs/                         # 每日学习笔记（知识点 + 真实坑 + 待补强项）
-├── 00-learning-roadmap.md   # 全程学习路线总览
-├── day1-learning-notes.md ~ day15-learning-notes.md
+docs/                         # 学习文档（路线 / 总结 / 每日笔记）
+├── 00-learning-roadmap.md   # 全程学习路线（18 课全部完成）
+├── learning-summary.md      # 学习总结：知识地图 / 掌握度 / 未来方向 A-G
+├── day1-learning-notes.md ~ day16-learning-notes.md   # 每日详尽笔记
 gradle/libs.versions.toml     # 依赖版本集中管理
 ```
 
 ## 学习路线
 
-完整路线见 [docs/00-learning-roadmap.md](docs/00-learning-roadmap.md)。当前进度：已完成 17 课（Day1-15），第十六课「现代特性速览」与第十七课「并发进阶」已完结，进行中为第十八课「综合实战 IoC」。
+完整路线见 [docs/00-learning-roadmap.md](docs/00-learning-roadmap.md)，学习总结与未来方向见 [docs/learning-summary.md](docs/learning-summary.md)。
+**18 课全部完成 ✅**，下一步从未来方向 A-G 中自选（A Spring Boot / B 补薄弱 / C 读源码 / D JVM / E 并发深入 / F 工程化 / G 综合实战）。
 
 ```mermaid
 graph LR
@@ -136,7 +148,7 @@ graph LR
 
 ## 进度
 
-### 已完成（15 课）
+### 已完成（18 课 ✅）
 
 - [x] 第一课：集合框架（[ListLab](app/src/main/java/learning/pra/collections/ListLab.java)）- 去重 / 反转 / 频率 / max / 不可变集合
 - [x] 第二课：泛型（[GenericsLab](app/src/main/java/learning/pra/generics/GenericsLab.java)）- 类型参数 / 上界 / PECS / 类型擦除 / Stack 泛型类
@@ -155,10 +167,11 @@ graph LR
 - [x] 第十五课：NIO（[NioLab](app/src/main/java/learning/pra/nio/NioLab.java)）- Path / Files / ByteBuffer / 便捷读写，8 测试
 - [x] 第十六课：现代特性速览（[VehicleLab](app/src/main/java/learning/pra/modern/VehicleLab.java)）- Records / Sealed / Pattern Matching / Switch Pattern / Text Blocks
 - [x] 第十七课：并发进阶（[ReentrantLockLab](app/src/main/java/learning/pra/concurrent/ReentrantLockLab.java) / [ConditionLab](app/src/main/java/learning/pra/concurrent/ConditionLab.java) / [AsyncAggregateLab](app/src/main/java/learning/pra/concurrent/AsyncAggregateLab.java) / [ExecutorPoolLab](app/src/main/java/learning/pra/concurrent/ExecutorPoolLab.java) / [VirtualThreadLab](app/src/main/java/learning/pra/concurrent/VirtualThreadLab.java)）- 锁 / 条件 / 异步聚合 / 线程池 / 虚拟线程，13 测试
+- [x] 第十八课：综合实战 · 迷你 IoC 框架（[MiniContainer](app/src/main/java/learning/pra/ioc/MiniContainer.java) + 注解三件套 + [OrderService](app/src/main/java/learning/pra/ioc/OrderService.java)）- IoC/DI / 懒加载 / 依赖注入 / 循环依赖检测 / 对照 Spring，14 测试
 
-### 进行中 / 未完成（详见 [学习路线](docs/00-learning-roadmap.md)）
+### 未来方向（A-G，详见 [learning-summary.md](docs/learning-summary.md)）
 
-- [ ] 第十八课：综合实战 -- 微型 IoC 框架
+- **A** Spring Boot 过渡 ｜ **B** 补薄弱点 ｜ **C** 读开源源码 ｜ **D** JVM 深入 ｜ **E** 并发深入 ｜ **F** 工程化 ｜ **G** 综合实战
 
 ## 学习笔记
 
@@ -166,7 +179,8 @@ graph LR
 
 | 笔记 | 日期 | 内容 |
 |------|------|------|
-| [00 路线总览](docs/00-learning-roadmap.md) | 08-05 | 全程学习路线 + 薄弱点识别 + 节奏建议 |
+| [学习总结](docs/learning-summary.md) | 08-15 | 全旅程总结：知识地图 / 掌握度 / 未来方向 A-G |
+| [00 路线总览](docs/00-learning-roadmap.md) | 08-15 | 全程学习路线（18 课全部完成）|
 | [day1](docs/day1-learning-notes.md) | 07-31 | 集合 / 泛型 / Stream / 现代特性 |
 | [day2](docs/day2-learning-notes.md) | 08-01 | 并发与多线程 |
 | [day3](docs/day3-learning-notes.md) | 08-02 | 异常体系 |
@@ -182,6 +196,7 @@ graph LR
 | [day13](docs/day13-learning-notes.md) | 08-12 | 现代特性速览（Records / Sealed）|
 | [day14](docs/day14-learning-notes.md) | 08-13 | 现代特性速览（instanceof / Switch Pattern / Text Blocks）|
 | [day15](docs/day15-learning-notes.md) | 08-14 | 并发进阶详尽版（锁 / 条件 / 异步 / 线程池 / 虚拟线程）|
+| [day16](docs/day16-learning-notes.md) | 08-15 | 迷你 IoC 框架详尽版（注解+反射深潜 / 懒加载 / 循环依赖 / 对照 Spring）|
 
 ## 备注
 
