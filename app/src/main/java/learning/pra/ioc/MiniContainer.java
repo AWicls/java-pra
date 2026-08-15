@@ -60,11 +60,10 @@ public class MiniContainer {
      * <p>本方法<b>只登记、不创建任何实例</b>——这是懒加载的前提，
      * 也保证依赖可以靠 getBean 递归解析、与登记顺序无关。
      *
+     * <p>注意：方法签名上的受检异常（InstantiationException 等）是懒加载改造前的残留，
+     * 本方法实际只做注解判断与登记，不会抛出它们。
+     *
      * @param type 待登记的类（可变参数，可一次传多个）
-     * @throws InstantiationException  实例化失败（如抽象类/接口）时抛出
-     * @throws IllegalAccessException  构造器不可访问时抛出
-     * @throws InvocationTargetException 构造器内部抛异常时包装抛出
-     * @throws NoSuchMethodException   找不到无参构造器时抛出
      */
     public void register(Class<?>... type) throws InstantiationException, IllegalAccessException,
             IllegalArgumentException, InvocationTargetException, NoSuchMethodException {

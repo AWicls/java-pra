@@ -13,6 +13,15 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * ConditionLab 有界阻塞队列的单元测试（第十七课概念点 2）。
+ *
+ * <p>覆盖 FIFO、满时 put 阻塞、空时 take 阻塞（CountDownLatch + AtomicBoolean 验证）、
+ * 多生产者多消费者不丢不重。
+ *
+ * @see ConditionLab
+ * @see BoundedBlockingQueue
+ */
 class ConditionLabTest {
 
     @Test

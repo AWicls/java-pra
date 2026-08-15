@@ -12,6 +12,14 @@ import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+/**
+ * ConcurrencyLab 并发核心的单元测试（第五课 + 第十七课补强）。
+ *
+ * <p>覆盖线程命名、synchronized 精确 vs unsafe 丢更新、AtomicInteger、volatile 退出、
+ * 生产者消费者、虚拟线程求和、CompletableFuture 补强（fallback / 超时 / 嵌套 vs 扁平）。
+ *
+ * @see ConcurrencyLab
+ */
 public class ConcurrencyLabTest {
 
     @Test

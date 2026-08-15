@@ -4,6 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * 泛型基础练习工具类（第二课）：泛型方法、上界、PECS、泛型内部类、类型擦除。
+ *
+ * <p>私有构造器，全部为 static 工具方法。覆盖 {@code <T extends Comparable<T>>} 上界、
+ * PECS（Producer extends / Consumer super）、泛型嵌套类 {@code Stack<T>}，
+ * 以及运行期类型擦除的验证。
+ *
+ * @see GenericPecsLab
+ */
 public class GenericsLab {
     private GenericsLab() {
     }

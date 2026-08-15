@@ -10,6 +10,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * NioLab 块式 IO 的单元测试（第十五课）。
+ *
+ * <p>覆盖写读往返、自动建父目录、readAllLines、fileCensus 统计、ByteBuffer flip、
+ * writeLines、Files.mismatch 比较。
+ *
+ * @see NioLab
+ */
 class NioLabTest {
 
     private static final String DIR = "build/tmp/nio-lab";

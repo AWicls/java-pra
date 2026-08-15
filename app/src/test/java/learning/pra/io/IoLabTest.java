@@ -10,6 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * IoLab 流式 IO 的单元测试（第七课）。
+ *
+ * <p>覆盖字符/字节流读写往返、空行保留、缺失文件抛 IOException、覆盖写、
+ * 分块拷贝、字节/字符桥一致性、NIO 版读写复制。
+ *
+ * @see IoLab
+ */
 class IoLabTest {
 
     private Path newTempFile(String name) throws IOException {

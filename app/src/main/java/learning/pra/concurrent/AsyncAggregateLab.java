@@ -2,6 +2,12 @@ package learning.pra.concurrent;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * CompletableFuture 异步聚合练习（第十七课概念点 3）：用户/商品/物流三个并行任务。
+ *
+ * <p>三个独立异步任务分别 sleep 模拟耗时，用 {@code thenCombine} 两两合并，
+ * 最终 {@code aggregate} 拼出"用户|商品|物流"——验证并行聚合耗时远小于串行和。
+ */
 public class AsyncAggregateLab {
 
     public static CompletableFuture<String> fetchUser(int userId) {

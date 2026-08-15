@@ -10,6 +10,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 固定线程池练习（第十七课概念点 4）：复用验证 + 结果收集。
+ *
+ * <p>countDistinctWorkers 用 ConcurrentHashMap.newKeySet 统计实际用到的 worker 数；
+ * sumResults 用 submit(Callable) + Future.get 拿回每个任务结果。
+ */
 public class ExecutorPoolLab {
 
     public static int countDistinctWorkers(int taskCount, int poolSize) throws InterruptedException {

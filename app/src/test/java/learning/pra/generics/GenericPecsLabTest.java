@@ -8,6 +8,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * GenericPecsLab 泛型进阶（PECS / 泛型数组 / 反射创建 / 多上界 / 泛型 DAO）的单元测试（第十三课）。
+ *
+ * <p>覆盖 PECS copyAll、泛型数组 workaround、反射实例化、多上界 bestName、
+ * {@code Box<T>} 与泛型 DAO {@code Repository<T>}。
+ *
+ * @see GenericPecsLab
+ */
 class GenericPecsLabTest {
 
     @Test

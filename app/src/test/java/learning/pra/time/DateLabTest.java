@@ -12,6 +12,14 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
+/**
+ * DateLab java.time 的单元测试（第十一课）。
+ *
+ * <p>覆盖 today、预约提醒（含不可变性断言）、跨时区偏移、工作时长、加 Period、
+ * 自定义格式 round-trip、分期日期（跨年、月末收缩、非法参数）。
+ *
+ * @see DateLab
+ */
 class DateLabTest {
 
     @Test

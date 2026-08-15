@@ -6,6 +6,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * ValidatorLab 反射表单校验器的单元测试（第九课实战）。
+ *
+ * <p>覆盖 @NotNull / @Length / @Range 的边界：null 跳过 Length、max/min 边界合规、
+ * 多违规返回多条。
+ *
+ * @see ValidatorLab
+ */
 class ValidatorLabTest {
 
     // ========== 辅助构造方法 ==========

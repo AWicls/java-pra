@@ -9,6 +9,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * OptionalLab 的单元测试（第十二课）。
+ *
+ * <p>覆盖创建（of / ofNullable / empty / 空值 NPE）、消费（isPresent / orElse / orElseThrow）、
+ * 链式（map / flatMap / filter）、以及嵌套安全取值 safeGetCity 防 NPE。
+ *
+ * @see OptionalLab
+ */
 class OptionalLabTest {
 
     @Test

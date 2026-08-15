@@ -6,6 +6,16 @@ import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+/**
+ * Stream 进阶练习工具类（第十四课）：分组、分区、flatMap、joining、自定义 Collector。
+ *
+ * <p>覆盖 {@code groupingBy} 系列（counting / summingInt / mapping / collectingAndThen）、
+ * {@code partitioningBy} 分桶、flatMap + distinct 拍平去重、joining 拼接、并行流，
+ * 以及手写 {@link Collector} 求平均值。
+ *
+ * @see StreamLab
+ * @see Sale
+ */
 public class StreamAdvLab {
 
     // groupingBy + counting：按区域分组，每组数有几笔订单

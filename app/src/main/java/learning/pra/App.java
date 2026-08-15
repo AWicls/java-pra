@@ -3,6 +3,11 @@
  */
 package learning.pra;
 
+/**
+ * 应用入口（Gradle init 模板生成）：演示 main + getGreeting。
+ *
+ * <p>非教学 Lab，仅作为项目可运行入口的占位；真正的学习代码在各主题包内。
+ */
 public class App {
     public String getGreeting() {
         return "Hello World!";

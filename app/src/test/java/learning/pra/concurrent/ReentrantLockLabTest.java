@@ -9,6 +9,14 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * ReentrantLockLab 银行账户的单元测试（第十七课概念点 1）。
+ *
+ * <p>覆盖并发存取正确、可重入不死锁、tryLock 超时 false 且不扣款、余额不足抛异常。
+ *
+ * @see ReentrantLockLab
+ * @see BankAccount
+ */
 class ReentrantLockLabTest {
 
     @Test

@@ -3,10 +3,23 @@ package learning.pra.concurrent;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Condition 练习壳类（第十七课概念点 2）：真正的实现在同文件 {@link BoundedBlockingQueue}。
+ *
+ * <p>演示 ReentrantLock + 双 Condition（notFull / notEmpty）手写有界阻塞队列。
+ *
+ * @see BoundedBlockingQueue
+ */
 public class ConditionLab {
 
 }
 
+/**
+ * 基于 ReentrantLock + Condition 的有界阻塞队列（环形缓冲）。
+ *
+ * <p>put 满时 await notFull，take 空时 await notEmpty；生产者只叫消费者、消费者只叫生产者。
+ * 条件检查必须用 while 防虚假唤醒；环形下标用 {@code % buffer.length} 取模。
+ */
 class BoundedBlockingQueue<E> {
     private final Object[] buffer;
     private int head = 0;

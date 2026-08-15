@@ -19,6 +19,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * EnumLab 枚举的全面单元测试（第十课），大量 @Nested 分组。
+ *
+ * <p>覆盖 switch 表达式、values / parse / valueOf、内置方法、字段构造器、每常量抽象方法、
+ * EnumSet / EnumMap、枚举单例三重防线、支付策略模式。
+ *
+ * @see EnumLab
+ */
 class EnumLabTest {
 
     @Nested

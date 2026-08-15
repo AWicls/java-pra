@@ -10,6 +10,13 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * AnnotationsLab @Label 自定义注解的单元测试（第九课）。
+ *
+ * <p>验证 RUNTIME 保留 + FIELD target，以及 readLabels 反射读取（含未贴注解字段的边界）。
+ *
+ * @see AnnotationsLab
+ */
 class AnnotationsLabLabelTest {
 
     @Test

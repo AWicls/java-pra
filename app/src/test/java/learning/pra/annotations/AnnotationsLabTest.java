@@ -7,6 +7,14 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * AnnotationsLab 内置注解演示的单元测试（第九课）。
+ *
+ * <p>验证 @FunctionalInterface / @Deprecated / @SuppressWarnings / @Override 四个内置
+ * 注解的贴注，以及函数式接口作为 lambda 使用。
+ *
+ * @see AnnotationsLab
+ */
 class AnnotationsLabTest {
 
     @Test

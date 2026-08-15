@@ -4,6 +4,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * ExecutorPoolLab 固定线程池的单元测试（第十七课概念点 4）。
+ *
+ * <p>验证线程复用（worker ≤ poolSize）+ 提交任务结果求和正确。
+ *
+ * @see ExecutorPoolLab
+ */
 class ExecutorPoolLabTest {
 
     @Test

@@ -3,10 +3,22 @@ package learning.pra.concurrent;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * ReentrantLock 练习壳类（第十七课概念点 1）：真正的实现在同文件 {@link BankAccount}。
+ *
+ * <p>演示手动加锁（lock / unlock + finally）、可重入、tryLock 限时获取。
+ *
+ * @see BankAccount
+ */
 public class ReentrantLockLab {
 
 }
 
+/**
+ * 基于 ReentrantLock 的银行账户：存取手动加锁，tryWithdraw 限时尝试扣款。
+ *
+ * <p>关键：检查与扣款必须都在锁内（防 TOCTOU 竞态）；lock 后任何路径都要 finally unlock。
+ */
 class BankAccount {
     private final String accountId;
     private int balance;

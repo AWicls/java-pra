@@ -7,6 +7,15 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 集合框架练习工具类（第一课）：List 去重保序、反转、频次统计、求最大值、转不可变 List。
+ *
+ * <p>私有构造器，全部方法为 static 工具方法；每个方法都是独立小练习，覆盖
+ * {@code LinkedHashSet} 去重、{@code List.reversed()}（JDK 21+）、{@code HashMap}
+ * 计数、不可变 List 等惯用法。
+ *
+ * @see learning.pra.stream.StreamLab
+ */
 public final class ListLab {
     private ListLab() {
     }

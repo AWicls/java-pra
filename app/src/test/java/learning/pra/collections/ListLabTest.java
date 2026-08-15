@@ -13,6 +13,14 @@ import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+/**
+ * ListLab 五个静态方法的单元测试（第一课集合）。
+ *
+ * <p>每个方法 2-3 个用例，覆盖正常、空列表、边界，以及不可变约束
+ * （如 toImmutable 之后修改抛 {@code UnsupportedOperationException}）。
+ *
+ * @see ListLab
+ */
 public class ListLabTest {
 
     @Test

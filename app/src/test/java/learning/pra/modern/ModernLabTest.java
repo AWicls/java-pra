@@ -7,6 +7,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * ModernLab 现代特性（Records / Sealed Classes / Pattern Matching）的单元测试（第十六课）。
+ *
+ * <p>覆盖 Record 自动方法、紧凑构造器校验、sealed 分层 area、Pattern Matching describe
+ * 的各类分支（整数/字符串/List/null/其他）。
+ *
+ * @see ModernLab
+ */
 class ModernLabTest {
 
     // ========== Point ==========

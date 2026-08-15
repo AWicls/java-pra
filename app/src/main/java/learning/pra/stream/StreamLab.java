@@ -3,6 +3,14 @@ package learning.pra.stream;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Stream 入门练习工具类（第三课）：filter / map / groupingBy / findFirst 五连练。
+ *
+ * <p>私有构造器，全部为 static 工具方法。覆盖偶数平方和、大写去重、按长度分组、
+ * 词频统计、findFirst + orElse（无命中返回 -1）。
+ *
+ * @see StreamAdvLab
+ */
 public final class StreamLab {
     private StreamLab() {
     }

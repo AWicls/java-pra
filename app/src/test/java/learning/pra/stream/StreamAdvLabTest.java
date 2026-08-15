@@ -9,6 +9,15 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * StreamAdvLab Stream 进阶的单元测试（第十四课）。
+ *
+ * <p>覆盖 groupingBy 系列、partition 边界（==threshold 算达标）、flatMap/distinct、
+ * joining、mapping/collectingAndThen、并行流一致性、自定义 Collector 均值。
+ *
+ * @see StreamAdvLab
+ * @see Sale
+ */
 class StreamAdvLabTest {
 
     private final List<Sale> sales = List.of(

@@ -13,6 +13,15 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * ExceptionLab 异常体系的单元测试（第六课）。
+ *
+ * <p>覆盖读文件受检异常、数组越界、try-with-resources 关闭逆序、finally 吞 return、
+ * 自定义 {@code ConfigException} 包裹 cause、异常链逐层解包。
+ *
+ * @see ExceptionLab
+ * @see ConfigException
+ */
 class ExceptionLabTest {
 
     @Test

@@ -8,6 +8,14 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * StreamLab Stream 入门的单元测试（第三课）。
+ *
+ * <p>重点测含 bug 的 sumOfEvenSquares / upperCaseDistinct；以及 groupByLength、
+ * wordFrequency、不可变 List、无命中返回 -1。
+ *
+ * @see StreamLab
+ */
 class StreamLabTest {
 
     // ========== sumOfEvenSquares：重点测（含 bug）==========

@@ -9,6 +9,13 @@ import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * GenericsLab 泛型基础的单元测试（第二课）。
+ *
+ * <p>覆盖 max 的 Comparable 上界（重点测）、Stack LIFO/空栈、PECS copy、类型擦除、reverse。
+ *
+ * @see GenericsLab
+ */
 class GenericsLabTest {
 
     // ========== max：泛型 + 上界 + Comparable（重点测）==========

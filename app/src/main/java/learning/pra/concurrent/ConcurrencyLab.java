@@ -13,6 +13,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
+/**
+ * 并发与多线程核心练习集（第五课 + 第十七课补强）。
+ *
+ * <p>覆盖：synchronized 精确 vs unsafe 丢更新、AtomicInteger、volatile 可见性、
+ * ArrayBlockingQueue 生产者消费者、虚拟线程求和、CompletableFuture 组合/降级/超时/嵌套。
+ *
+ * <p>注意：本类持有实例状态字段（unsafeCount / safeCount），与其它纯静态 Lab 不同。
+ */
 public class ConcurrencyLab {
 
     // 持有状态字段

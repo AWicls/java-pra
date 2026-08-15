@@ -216,18 +216,18 @@ getBean(A) → creating.add(A) ✅ → 注入 getBean(B)
 
 ```mermaid
 flowchart LR
-    subgraph 印章[注解层 · 三个印章]
-        C[@Component<br/>印在类上]
-        I[@Inject<br/>印在字段上]
-        S[@Singleton<br/>印在类上]
+    subgraph seal["注解层 · 三个印章"]
+        C["@Component<br/>印在类上"]
+        I["@Inject<br/>印在字段上"]
+        S["@Singleton<br/>印在类上"]
     end
-    subgraph 模板[类层 · 被盖章的对象模板]
+    subgraph template["类层 · 被盖章的对象模板"]
         subgraph OS["OrderService<br/>@Component + @Singleton"]
             F["repository 字段<br/>@Inject"]
         end
         OR["OrderRepository<br/>@Component"]
     end
-    subgraph 档案[容器层 · MiniContainer]
+    subgraph container["容器层 · MiniContainer"]
         comp["components 登记集"]
         sin["singletons 单例缓存"]
     end

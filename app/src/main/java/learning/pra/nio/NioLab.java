@@ -7,6 +7,14 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * NIO 与现代 IO 练习工具类（第十五课）：Path / Files / ByteBuffer。
+ *
+ * <p>覆盖 Files.writeString / readString、readAllLines、文件清单统计、
+ * ByteBuffer flip 读写、按行写、Files.mismatch 比较（对比第七课流式 IoLab 的块式 IO）。
+ *
+ * @see learning.pra.io.IoLab
+ */
 public class NioLab {
 
     public static String writeAndRead(String dir, String filename, String content) throws IOException {

@@ -11,6 +11,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * java.time 日期时间练习（第十一课）：LocalDate/LocalTime/LocalDateTime、时区、时长周期、格式化。
+ *
+ * <p>覆盖 today、预约提醒、跨时区会议时间、工作时长、加工作日、
+ * 自定义 DateTimeFormatter 格式化/解析、分期日期（账单计算器）。
+ */
 public class DateLab {
 
     public static LocalDate today() {

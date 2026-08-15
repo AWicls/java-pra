@@ -4,6 +4,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * AsyncAggregateLab 并发聚合的单元测试（第十七课概念点 3）。
+ *
+ * <p>验证聚合结果格式（"用户1|商品2|物流3"）+ 并发聚合耗时远小于串行和。
+ *
+ * @see AsyncAggregateLab
+ */
 class AsyncAggregateLabTest {
 
     @Test

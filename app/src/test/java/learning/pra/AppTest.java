@@ -6,6 +6,11 @@ package learning.pra;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * App 冒烟测试：验证 getGreeting 非 null。
+ *
+ * @see App
+ */
 class AppTest {
     @Test void appHasAGreeting() {
         App classUnderTest = new App();

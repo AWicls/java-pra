@@ -5,6 +5,12 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 
+/**
+ * 枚举全景练习（第十课）：本质、字段构造器、抽象方法、EnumSet/EnumMap、单例、策略模式。
+ *
+ * <p>内含 TrafficLight（带字段+构造器+switch 表达式）、Operation（每常量抽象方法）、
+ * Permission + AppConfig（EnumSet/EnumMap 权限、枚举单例）、PaymentMethod（策略模式）。
+ */
 public class EnumLab {
     public static enum TrafficLight {
         RED("红灯", 30),
