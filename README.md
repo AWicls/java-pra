@@ -91,15 +91,15 @@ app/src/test/java/learning/pra/   # 测试与源码同包（各包同构）
 └── ioc/MiniContainerTest.java
 
 docs/                         # 学习文档（路线 / 总结 / 每日笔记）
-├── 00-learning-roadmap.md   # 全程学习路线（18 课全部完成）
-├── learning-summary.md      # 学习总结：知识地图 / 掌握度 / 未来方向 A-G
+├── 00-learning-roadmap.md   # 总览 + 路线 + 总结（18 课全部完成 + 未来方向 A-G）
+├── java-reading-guide.md    # 读码速查：词汇 / Javadoc / 报错
 ├── day1-learning-notes.md ~ day16-learning-notes.md   # 每日详尽笔记
 gradle/libs.versions.toml     # 依赖版本集中管理
 ```
 
 ## 学习路线
 
-完整路线见 [docs/00-learning-roadmap.md](docs/00-learning-roadmap.md)，学习总结与未来方向见 [docs/learning-summary.md](docs/learning-summary.md)。
+完整总览与未来方向见 [docs/00-learning-roadmap.md](docs/00-learning-roadmap.md)，读码速查见 [docs/java-reading-guide.md](docs/java-reading-guide.md)。
 **18 课全部完成 ✅**，下一步从未来方向 A-G 中自选（A Spring Boot / B 补薄弱 / C 读源码 / D JVM / E 并发深入 / F 工程化 / G 综合实战）。
 
 ```mermaid
@@ -169,7 +169,7 @@ graph LR
 - [x] 第十七课：并发进阶（[ReentrantLockLab](app/src/main/java/learning/pra/concurrent/ReentrantLockLab.java) / [ConditionLab](app/src/main/java/learning/pra/concurrent/ConditionLab.java) / [AsyncAggregateLab](app/src/main/java/learning/pra/concurrent/AsyncAggregateLab.java) / [ExecutorPoolLab](app/src/main/java/learning/pra/concurrent/ExecutorPoolLab.java) / [VirtualThreadLab](app/src/main/java/learning/pra/concurrent/VirtualThreadLab.java)）- 锁 / 条件 / 异步聚合 / 线程池 / 虚拟线程，13 测试
 - [x] 第十八课：综合实战 · 迷你 IoC 框架（[MiniContainer](app/src/main/java/learning/pra/ioc/MiniContainer.java) + 注解三件套 + [OrderService](app/src/main/java/learning/pra/ioc/OrderService.java)）- IoC/DI / 懒加载 / 依赖注入 / 循环依赖检测 / 对照 Spring，14 测试
 
-### 未来方向（A-G，详见 [learning-summary.md](docs/learning-summary.md)）
+### 未来方向（A-G，详见 [00-learning-roadmap.md](docs/00-learning-roadmap.md)）
 
 - **A** Spring Boot 过渡 ｜ **B** 补薄弱点 ｜ **C** 读开源源码 ｜ **D** JVM 深入 ｜ **E** 并发深入 ｜ **F** 工程化 ｜ **G** 综合实战
 
@@ -179,7 +179,7 @@ graph LR
 
 | 笔记 | 日期 | 内容 |
 |------|------|------|
-| [学习总结](docs/learning-summary.md) | 08-15 | 全旅程总结：知识地图 / 掌握度 / 未来方向 A-G |
+| [读码速查](docs/java-reading-guide.md) | 08-15 | 词汇 / Javadoc / 报错速查 |
 | [00 路线总览](docs/00-learning-roadmap.md) | 08-15 | 全程学习路线（18 课全部完成）|
 | [day1](docs/day1-learning-notes.md) | 07-31 | 集合 / 泛型 / Stream / 现代特性 |
 | [day2](docs/day2-learning-notes.md) | 08-01 | 并发与多线程 |
