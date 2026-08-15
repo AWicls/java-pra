@@ -22,11 +22,18 @@ class MiniContainerTest {
     public static class SingletonOnly {
     }
 
+    // 无任何注解的普通类（验证 register 静默忽略）
+    public static class PlainClass {
+    }
+
     @Test
     void 单例Bean多次获取同一实例() throws Exception {
         MiniContainer container = new MiniContainer();
-        container.register(OrderService.class);
-        assertSame(container.getBean(OrderService.class), container.getBean(OrderService.class));
+        container.register(OrderService.class, OrderRepository.class);
+        OrderService a = container.getBean(OrderService.class);
+        OrderService b = container.getBean(OrderService.class);
+        assertNotNull(a);
+        assertSame(a, b);
     }
 
     @Test
@@ -39,7 +46,7 @@ class MiniContainerTest {
     @Test
     void 非Component类注册被忽略() {
         MiniContainer container = new MiniContainer();
-        assertDoesNotThrow(() -> container.register(OrderRepository.class));
+        assertDoesNotThrow(() -> container.register(PlainClass.class));
     }
 
     @Test
@@ -62,5 +69,26 @@ class MiniContainerTest {
         f.setAccessible(true);
         Map<?, ?> singletons = (Map<?, ?>) f.get(container);
         assertTrue(singletons.isEmpty());
+    }
+
+    @Test
+    void 单例Bean注入了依赖字段() throws Exception {
+        MiniContainer container = new MiniContainer();
+        container.register(OrderService.class, OrderRepository.class);
+        OrderService service = container.getBean(OrderService.class);
+        Field f = OrderService.class.getDeclaredField("repository");
+        f.setAccessible(true);
+        assertNotNull(f.get(service));
+    }
+
+    @Test
+    void 单例注入的依赖是同一实例() throws Exception {
+        MiniContainer container = new MiniContainer();
+        container.register(OrderService.class, OrderRepository.class);
+        Field f = OrderService.class.getDeclaredField("repository");
+        f.setAccessible(true);
+        OrderService a = container.getBean(OrderService.class);
+        OrderService b = container.getBean(OrderService.class);
+        assertSame(f.get(a), f.get(b));
     }
 }

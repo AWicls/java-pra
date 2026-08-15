@@ -1,5 +1,6 @@
 package learning.pra.ioc;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,9 +19,9 @@ public class MiniContainer {
 
             if (equalsComponent) {
                 components.add(clazz);
-                if (equalsSingleton) {
-                    singletons.put(clazz, clazz.getDeclaredConstructor().newInstance());
-                }
+                // if (equalsSingleton) {
+                // singletons.put(clazz, clazz.getDeclaredConstructor().newInstance());
+                // }
             }
         }
     }
@@ -30,14 +31,26 @@ public class MiniContainer {
         if (!components.contains(type)) {
             throw new IllegalArgumentException();
         }
-
-        // boolean ComponentPresent = type.isAnnotationPresent(Component.class);
-        boolean SingletonPresent = type.isAnnotationPresent(Singleton.class);
-
-        if (SingletonPresent) {
+        if (singletons.containsKey(type)) {
             return (T) singletons.get(type);
-        } else {
-            return type.getDeclaredConstructor().newInstance();
+        }
+        T bean = type.getDeclaredConstructor().newInstance();
+        injectDependencies(bean);
+        if (type.isAnnotationPresent(Singleton.class)) {
+            singletons.put(type, bean);
+        }
+        return bean;
+    }
+
+    private void injectDependencies(Object bean)
+            throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
+        Field[] fields = bean.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            boolean hasInject = field.isAnnotationPresent(Inject.class);
+            if (hasInject) {
+                field.setAccessible(true);
+                field.set(bean, getBean(field.getType()));
+            }
         }
     }
 }
