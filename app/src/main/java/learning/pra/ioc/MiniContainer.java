@@ -10,6 +10,11 @@ import java.util.Set;
 public class MiniContainer {
     private Map<Class<?>, Object> singletons = new HashMap<>();
     private Set<Class<?>> components = new HashSet<>();
+    private final Set<Class<?>> creating = new HashSet<>();
+
+    public static void main(String[] args) {
+        
+    }
 
     public void register(Class<?>... type) throws InstantiationException, IllegalAccessException,
             IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
@@ -34,12 +39,20 @@ public class MiniContainer {
         if (singletons.containsKey(type)) {
             return (T) singletons.get(type);
         }
-        T bean = type.getDeclaredConstructor().newInstance();
-        injectDependencies(bean);
-        if (type.isAnnotationPresent(Singleton.class)) {
-            singletons.put(type, bean);
+        boolean hasCreate = creating.add(type);
+        if (!hasCreate) {
+            throw new IllegalStateException("检测到循环依赖: " + type.getName());
         }
-        return bean;
+        try {
+            T bean = type.getDeclaredConstructor().newInstance();
+            injectDependencies(bean);
+            if (type.isAnnotationPresent(Singleton.class)) {
+                singletons.put(type, bean);
+            }
+            return bean;
+        } finally {
+            creating.remove(type);
+        }
     }
 
     private void injectDependencies(Object bean)

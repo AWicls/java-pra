@@ -26,6 +26,19 @@ class MiniContainerTest {
     public static class PlainClass {
     }
 
+    // 互相注入的两个类（验证循环依赖检测）
+    @Component
+    public static class ServiceA {
+        @Inject
+        private ServiceB b;
+    }
+
+    @Component
+    public static class ServiceB {
+        @Inject
+        private ServiceA a;
+    }
+
     @Test
     void 单例Bean多次获取同一实例() throws Exception {
         MiniContainer container = new MiniContainer();
@@ -90,5 +103,20 @@ class MiniContainerTest {
         OrderService a = container.getBean(OrderService.class);
         OrderService b = container.getBean(OrderService.class);
         assertSame(f.get(a), f.get(b));
+    }
+
+    @Test
+    void 循环依赖抛清晰异常而非栈溢出() throws Exception {
+        MiniContainer container = new MiniContainer();
+        container.register(ServiceA.class, ServiceB.class);
+        assertThrows(IllegalStateException.class, () -> container.getBean(ServiceA.class));
+    }
+
+    @Test
+    void 注入的依赖能被真正调用() throws Exception {
+        MiniContainer container = new MiniContainer();
+        container.register(OrderService.class, OrderRepository.class);
+        OrderService service = container.getBean(OrderService.class);
+        assertEquals("已保存:咖啡", service.createOrder("咖啡"));
     }
 }
